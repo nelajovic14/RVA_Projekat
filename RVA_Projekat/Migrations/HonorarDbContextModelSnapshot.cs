@@ -103,6 +103,12 @@ namespace RVA_Projekat.Migrations
                     b.Property<string>("Username")
                         .HasColumnType("navarchar(30)");
 
+                    b.Property<string>("Name")
+                        .HasColumnType("navarchar(30)");
+
+                    b.Property<string>("LastName")
+                        .HasColumnType("navarchar(30)");
+
                     b.HasKey("Id");
 
                     b.ToTable("Users");

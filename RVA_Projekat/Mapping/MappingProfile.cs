@@ -12,6 +12,7 @@ namespace RVA_Projekat.Mapping
             CreateMap<BrutoHonorar, BrutoHonorarDto>().ReverseMap();
             CreateMap<NetoHonorar, NetoHonorarDto>().ReverseMap();
             CreateMap<User, UserDto>().ReverseMap();
+            CreateMap<User, UserRegisterDto>().ReverseMap();
         }
 
     }

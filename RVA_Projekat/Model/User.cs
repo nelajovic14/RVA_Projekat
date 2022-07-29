@@ -11,5 +11,9 @@ namespace RVA_Projekat.Model
         public string Username { get; set; }
         [Column(TypeName = "nvarchar(max)")]
         public string Password { get; set; }
+        [Column(TypeName = "nvarchar(30)")]
+        public string Name { get; set; }
+        [Column(TypeName = "nvarchar(30)")]
+        public string LastName { get; set; }
     }
 }

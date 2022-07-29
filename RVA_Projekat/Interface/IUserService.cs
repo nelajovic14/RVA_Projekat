@@ -5,5 +5,6 @@ namespace RVA_Projekat.Interface
     public interface IUserService
     {
         string Login(UserDto dto);
+        bool Register(UserRegisterDto dto);
     }
 }

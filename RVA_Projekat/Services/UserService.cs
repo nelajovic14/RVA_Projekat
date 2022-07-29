@@ -25,11 +25,7 @@ namespace RVA_Projekat.Services
         }
 
         public string Login(UserDto dto)
-        {
-            /*User user;
-            if (( user = users.First(x => x.Username == dto.Username))==null)
-                    return null;
-            */
+        { 
             User user = _userRepository.FindByUsername(dto.Username);
             if (user == null)
                 return null;
@@ -41,7 +37,7 @@ namespace RVA_Projekat.Services
                 if (dto.Username == "admin")
                     claims.Add(new Claim(ClaimTypes.Role, "admin")); //Add user type to claim
                 
-                claims.Add(new Claim("Neki_moj_claim", "imam_ga"));
+                //claims.Add(new Claim("Neki_moj_claim", "imam_ga"));
 
                 //Kreiramo kredencijale za potpisivanje tokena. Token mora biti potpisan privatnim kljucem
                 //kako bi se sprecile njegove neovlascene izmene
@@ -61,6 +57,25 @@ namespace RVA_Projekat.Services
             {
                 return null;
             }
+        }
+
+        public bool Register(UserRegisterDto dto)
+        {
+            User user = _userRepository.FindByUsername(dto.Username);
+            if (user != null)
+                return false;
+
+
+            try
+            {
+                _userRepository.Add(new User() { Username = dto.Username, Password = dto.Password, Name = dto.Name, LastName = dto.LastName });
+            }
+            catch(Exception e)
+            {
+                Console.Write(e.Message);
+                return false;
+            }
+            return true;
         }
     }
 }

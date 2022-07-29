@@ -28,7 +28,7 @@ namespace RVA_Projekat.Initilaizer
                     return;
                 }
             }
-            userRepository.Add(new User() { Username = "admin", Password = BCrypt.Net.BCrypt.HashPassword("admin") });
+            userRepository.Add(new User() { Username = "admin", Password = BCrypt.Net.BCrypt.HashPassword("admin"),Name="Admin",LastName="Admin"});
             _dbContext.SaveChanges();
         }
 

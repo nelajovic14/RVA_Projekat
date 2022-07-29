@@ -22,13 +22,17 @@ namespace RVA_Projekat.Controllers
             this.userServis = userServis;
         }
 
-        [HttpPost]
-        public IActionResult Post([FromBody] UserDto dto)
+        [HttpPost("login")]
+        public IActionResult Login([FromBody] UserDto dto)
         {
             return Ok(userServis.Login(dto));
         }
-       
 
+        [HttpPost("register")]
+        public IActionResult Register([FromBody] UserRegisterDto dto)
+        {
+            return Ok(userServis.Register(dto));
+        }
 
     }
 }
