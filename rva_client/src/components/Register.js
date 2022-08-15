@@ -1,10 +1,8 @@
 import React from "react";
-import ReactDOM from 'react-dom'
 import { createAPIEndpointRegister } from "../api/index.js";
-import { createRoot } from 'react-dom/client';
+import * as ReactDOMClient from 'react-dom/client';
 import useForm from "../useForm";
 import Result from "./Result.js";
-import jwt_decode from "jwt-decode";
 
 const getFreshModelObject=()=>({
     username:'',
@@ -27,11 +25,11 @@ export default function Register(){
             e.preventDefault();
             if(validate()){
                 const container = document.getElementById('root');
-                const root = createRoot(container);
+                const root = ReactDOMClient.createRoot(container);
                 var decoded;
                 createAPIEndpointRegister('users')
                 .post(values)
-                .then(res=>(console.log(res),root.render(<Result/>)))
+                .then(res=>(console.log(res),root.render(<Result username={values.username} password={values.password}/>)))
                 .catch(err=>console.log(err))
 
 

@@ -59,6 +59,26 @@ namespace RVA_Projekat.Services
             }
         }
 
+        public void Edit(UserEditdto dto)
+        {
+            User user = _userRepository.FindByUsername(dto.Username);
+            if (user == null)
+                return;
+
+            if (BCrypt.Net.BCrypt.Verify(dto.Password, user.Password))//Uporedjujemo hes pasvorda iz baze i unetog pasvorda
+            {
+                user.Name = dto.Name;
+                user.LastName = dto.LastName;
+                _userRepository.Remove(user);
+                _userRepository.Add(new User() { Username = dto.Username, Password = BCrypt.Net.BCrypt.HashPassword(dto.Password), Name = dto.Name, LastName = dto.LastName });
+                
+            }
+            else
+            {
+                return;
+            }
+        }
+
         public bool Register(UserRegisterDto dto)
         {
             User user = _userRepository.FindByUsername(dto.Username);
@@ -68,7 +88,7 @@ namespace RVA_Projekat.Services
 
             try
             {
-                _userRepository.Add(new User() { Username = dto.Username, Password = dto.Password, Name = dto.Name, LastName = dto.LastName });
+                _userRepository.Add(new User() { Username = dto.Username, Password = BCrypt.Net.BCrypt.HashPassword(dto.Password), Name = dto.Name, LastName = dto.LastName });
             }
             catch(Exception e)
             {
@@ -76,6 +96,12 @@ namespace RVA_Projekat.Services
                 return false;
             }
             return true;
+        }
+
+        public User Get(UserDto dto)
+        {
+            User user = _userRepository.FindByUsername(dto.Username);
+            return user;
         }
     }
 }

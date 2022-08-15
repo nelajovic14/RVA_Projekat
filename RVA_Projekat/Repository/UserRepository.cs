@@ -19,6 +19,7 @@ namespace RVA_Projekat.Repository
         public User Add(User entity)
         {
             _dbContext.Users.Add(entity);
+            _dbContext.SaveChanges();
             return entity;
         }
 
@@ -41,6 +42,7 @@ namespace RVA_Projekat.Repository
         public void Remove(User entity)
         {
             _dbContext.Users.Remove(entity);
+            _dbContext.SaveChanges();
         }
     }
 }

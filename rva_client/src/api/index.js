@@ -23,3 +23,25 @@ export const createAPIEndpointRegister = endpoint => {
         
     }
 }
+
+export const createAPIEndpointEdit = endpoint => {
+    let url=BASE_URL+'api/'+endpoint+'/';
+    return{
+        fetch:()=> axios.get(url),
+        fetchById:id=>axios.get(url+id),
+        put: newRecord=>axios.put
+        (url,newRecord),
+        
+    }
+}
+
+export const createAPIEndpointgetUser = endpoint => {
+    let url=BASE_URL+'api/'+endpoint+'/getUser';
+    return{
+        fetch:()=> axios.get(url),
+        fetchById:id=>axios.get(url+id),
+        post: newRecord=>axios.post
+        (url,newRecord),
+        
+    }
+}

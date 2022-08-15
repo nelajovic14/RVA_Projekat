@@ -34,5 +34,17 @@ namespace RVA_Projekat.Controllers
             return Ok(userServis.Register(dto));
         }
 
+        [HttpPut]
+        public IActionResult Put([FromBody] UserEditdto dto)
+        {
+            userServis.Edit(dto);
+            return Ok();
+        }
+        [HttpPost("getUser")]
+        public IActionResult getUser([FromBody] UserDto dto)
+        {
+            
+            return Ok(userServis.Get(dto));
+        }
     }
 }
