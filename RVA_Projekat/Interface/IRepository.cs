@@ -8,7 +8,7 @@ namespace RVA_Projekat.Interface
     {
         T Add(T entity);
         List<T> GetAll();
-        T Find(long id);
+        T Find(int id);
         void Remove(T entity);
     }
 }

@@ -94,8 +94,22 @@ namespace RVA_Projekat
 
 
             services.AddScoped<IUserInitializer, UserInitializer>();
+            services.AddScoped<INetohonorarInitializer, NetohonorarInitializer>();
+            services.AddScoped<IBrutoHonorarInitializer, BrutoHonorarInitializer>();
+            services.AddScoped<IZaposleniInitializer, ZaposleniInitializer>();
+
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<INetohonorarService, NetohonorarService>();
+            services.AddScoped<IBrutoHonorarService, BrutoHonorarService>();
+            services.AddScoped<IZaposleniService, ZapolseniService>();
+
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<INetohonorarRepository, NetohonorarRepository>();
+            services.AddScoped<IBrutoHonorarRepository, BrutoHonorarRepository>();
+            services.AddScoped<IZaposleniRepository, ZaposleniRepository>();
+
+            services.AddScoped<IPorezRepository, PorezRepository>();
+
             var mapperConfig = new MapperConfiguration(mc =>
             {
                 mc.AddProfile(new MappingProfile());
@@ -127,6 +141,9 @@ namespace RVA_Projekat
             {
                 // koristi se za inicijalizaciju podataka
                 scope.ServiceProvider.GetRequiredService<IUserInitializer>().InitializeUseres();
+                scope.ServiceProvider.GetRequiredService<IBrutoHonorarInitializer>().InitializBrutoHonorars();
+                scope.ServiceProvider.GetRequiredService<INetohonorarInitializer>().InitializeNetohonorars();
+                scope.ServiceProvider.GetRequiredService<IZaposleniInitializer>().InitializeUseres();
             }
             app.UseHttpsRedirection();
 

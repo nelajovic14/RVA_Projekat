@@ -7,9 +7,10 @@ namespace RVA_Projekat.Dto
     public class NetoHonorarDto
     {
         public int Id { get; set; }
-        public List<Porez> Porezi { get; set; }
-        public Umanjenje umanjenje { get; set; }
-        public Uvecanje uvecanje { get; set; }
+        public int BrutoHonorarId { get; set; }
+        public List<string> Porezi { get; set; }
+        public string umanjenje { get; set; }
+        public string uvecanje { get; set; }
         public BrutoHonorar honorar { get; set; }
     }
 }

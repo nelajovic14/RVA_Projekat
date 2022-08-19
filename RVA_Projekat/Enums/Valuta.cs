@@ -4,10 +4,7 @@
     {
         RSD,
         EUR,
-        KM,
-        KN,
-        USD,
-        RUB,
-        CHF
+        KM
+        
     }
 }

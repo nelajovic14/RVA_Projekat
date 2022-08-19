@@ -8,6 +8,12 @@ namespace RVA_Projekat.Model
         {
         }
 
+        public BrutoHonorar(int trenutnaPlata, Valuta valuta)
+        {
+            TrenutnaPlata = trenutnaPlata;
+            this.valuta = valuta;
+        }
+
         public BrutoHonorar(int id, int trenutnaPlata, Valuta valuta)
         {
             Id = id;

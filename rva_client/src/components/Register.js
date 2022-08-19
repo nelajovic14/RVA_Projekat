@@ -26,13 +26,11 @@ export default function Register(){
             if(validate()){
                 const container = document.getElementById('root');
                 const root = ReactDOMClient.createRoot(container);
-                var decoded;
                 createAPIEndpointRegister('users')
                 .post(values)
-                .then(res=>(console.log(res),root.render(<Result username={values.username} password={values.password}/>)))
+                .then(res=>(console.log(res),root.render(<Result />)))
                 .catch(err=>console.log(err))
-
-
+                
             }
         }
         let usernameError = "";

@@ -23,7 +23,7 @@ namespace RVA_Projekat.Repository
             return entity;
         }
 
-        public User Find(long id)
+        public User Find(int id)
         {
             User u = _dbContext.Users.Find(id);
             return u;

@@ -52,13 +52,15 @@ namespace RVA_Projekat.Migrations
                     b.Property<int>("BrutoHonorarId")
                         .HasColumnType("int");
 
-                    b.Property<int>("IdPorez")
-                        .HasColumnType("int");
 
                     b.Property<int>("umanjenje")
                         .HasColumnType("int");
 
                     b.Property<int>("uvecanje")
+                        .HasColumnType("int");
+
+
+                    b.Property<int>("IdPorez")
                         .HasColumnType("int");
 
                     b.HasKey("Id");

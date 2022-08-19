@@ -9,6 +9,7 @@ namespace RVA_Projekat.Infrastructure
         public DbSet<NetoHonorar> NetoHonorars { get; set; }
         public DbSet<Zaposleni> Zaposlenis { get; set; }
         public DbSet<User> Users { get; set; }
+        public DbSet<Porez> Porez { get; set; }
 
         public HonorarDbContext(DbContextOptions options) : base(options)
         {
@@ -17,7 +18,6 @@ namespace RVA_Projekat.Infrastructure
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            //Kazemo mu da pronadje sve konfiguracije u Assembliju i da ih primeni nad bazom
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(HonorarDbContext).Assembly);
         }
     }
