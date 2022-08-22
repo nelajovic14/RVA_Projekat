@@ -27,6 +27,7 @@ namespace RVA_Projekat.Repository
 
         public List<BrutoHonorar> GetAll()
         {
+            
             return _dbContext.BrutoHonorars.ToList<BrutoHonorar>();
         }
 
@@ -34,6 +35,12 @@ namespace RVA_Projekat.Repository
         {
             _dbContext.BrutoHonorars.Remove(entity);
             _dbContext.SaveChanges();
+        }
+        public BrutoHonorar Edit(BrutoHonorar bh)
+        {
+            _dbContext.Update(bh);
+            _dbContext.SaveChanges();
+            return bh;
         }
     }
 }

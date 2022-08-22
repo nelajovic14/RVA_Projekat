@@ -61,5 +61,24 @@ namespace RVA_Projekat.Services
             }
             return null;
         }
+
+        public BrutoHonorar Edit(BrutoHonorarDto dto)
+        {
+            BrutoHonorar brutoHonorar = GetById(dto.Id);
+            brutoHonorar.TrenutnaPlata = dto.TrenutnaPlata;
+            if (dto.valuta == "KM")
+            {
+                brutoHonorar.valuta = Valuta.KM;
+            }
+            else if (dto.valuta == "EUR")
+            {
+                brutoHonorar.valuta = Valuta.EUR;
+            }
+            else
+            {
+                brutoHonorar.valuta = Valuta.RSD;
+            }
+            return repository.Edit(brutoHonorar);
+        }
     }
 }

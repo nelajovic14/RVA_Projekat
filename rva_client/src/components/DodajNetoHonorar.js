@@ -1,4 +1,4 @@
-import React,{useRef, useState} from "react";
+import React,{useRef} from "react";
 import { dodajNeto,dodajBruto } from "../api/index.js";
 import useForm from "../useForm";
 import * as ReactDOMClient from 'react-dom/client';
@@ -10,7 +10,8 @@ const getFreshModelObject=()=>({
     uvecanje:'',
     umanjenje:'',
     trenutnaPlata:0,
-    valuta:''
+    valuta:'',
+    korisnik:''
 })
 
 export default function DodajNetoHonorar(props){
@@ -31,6 +32,7 @@ export default function DodajNetoHonorar(props){
     const dodaj = e=>
     {        
         e.preventDefault();
+        values.korisnik='';
         if(!trenutnaPlata.current.value){
             alert("Morate uneti trenutnu platu")
             return;
@@ -71,10 +73,10 @@ export default function DodajNetoHonorar(props){
     }
 
     return(
-    <div>
-            
+    <div class="container text-center">
+           <div class="alert alert-success"><h3>Dodaj novi neto honorar :</h3> </div>
         <form onSubmit={dodaj}> 
-            Porezi : <select multiple={true} ref={porezi} onChange={(e)=> {handleSelect(e,porezi.current.value)}} >
+           <b>Porezi</b>  : <select multiple={true} ref={porezi} onChange={(e)=> {handleSelect(e,porezi.current.value)}} class="form-control">
                 <option value={"POTROSNJA"}>POTROSNJA</option>
                 <option value={"DOHODAK"}>DOHODAK</option>
                 <option value={"DOBIT"}>DOBIT</option>
@@ -97,18 +99,17 @@ export default function DodajNetoHonorar(props){
                 <option value={"STO"}>100 %</option>
             </select><br/><br/>
 
-            <br/><h5>Dodaj bruto honorar : </h5>
-            Trenutna plata : <input type={"number"} name='plata' ref={trenutnaPlata}  ></input><br/>
+            <br/><div class="alert alert-success"><h5>Dodaj bruto honorar neto honorara : </h5></div>
+            Trenutna plata : <input type={"number"} name='plata' ref={trenutnaPlata}  ></input><br/><br/>
             
             Valuta: <select ref={valuta}>
             <option value={"RSD"}>RSD</option>
             <option value={"EUR"}>EUR</option>
             <option value={"KM"}>KM</option>
             </select> <br/><br/>
-            <input type={"submit"} name='dodaj' value={"Dodaj"} ></input><br/>
+            <input type={"submit"} name='dodaj' value={"Dodaj"} class="btn btn-success"></input>&nbsp;&nbsp;
+        <input type={"button"} name='back' value={"Nazad"} onClick={nazad} class="btn btn-success"></input>
         </form>
-        <br/>
-        <input type={"button"} name='back' value={"Nazad"} onClick={nazad}></input><br/>
     </div>
     )
 }

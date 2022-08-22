@@ -9,7 +9,8 @@ const getFreshModelObject=()=>({
     godineIskustva:0,
     brutoHonorarId:0,
     trenutnaPlata:0,
-    valuta:''
+    valuta:'',
+    korisnik:''
 })
 
 
@@ -33,6 +34,7 @@ export default function DodajZaposlenog(props){
     const dodaj = e=>
     {        
         e.preventDefault();
+        values.korisnik=props.username;
         if(!ime.current.value){
             alert("Morate uneti ime")
             return;
@@ -83,23 +85,23 @@ export default function DodajZaposlenog(props){
     }
 
     return(
-    <div>
-            
+    <div class="container text-center">
+            <div class="alert alert-success"><h3><strong>Dodaj novog zaposlenog : </strong></h3></div><br/>
         <form onSubmit={dodaj}> 
-            Ime : <input type={"text"} name='ime' ref={ime}  ></input><br/>
-            Godine iskustva : <input type={"number"} name="godine" ref={godine}></input><br/>
-            <br/><h5>Dodaj bruto zaposlenog : </h5>
-            Trenutna plata : <input type={"number"} name='plata' ref={trenutnaPlata}  ></input><br/>
+            Ime : <input type={"text"} name='ime' ref={ime}  ></input><br/><br/>
+            Godine iskustva : <input type={"number"} name="godine" ref={godine}></input><br/><br/>
+            <br/> <div class="alert alert-success"><h5>Dodaj bruto zaposlenog : </h5></div>
+            Trenutna plata : <input type={"number"} name='plata' ref={trenutnaPlata}  ></input><br/><br/>
             
             Valuta: <select ref={valuta}>
             <option value={"RSD"}>RSD</option>
             <option value={"EUR"}>EUR</option>
             <option value={"KM"}>KM</option>
             </select> <br/><br/>
-            <input type={"submit"} name='dodaj' value={"Dodaj"} ></input><br/>
+            <input type={"submit"} name='dodaj' value={"Dodaj"} class="btn btn-success"></input>&nbsp;&nbsp;
+        <input type={"button"} name='back' value={"Nazad"} onClick={nazad} class="btn btn-success"></input><br/>
         </form>
         <br/>
-        <input type={"button"} name='back' value={"Nazad"} onClick={nazad}></input><br/>
     </div>
     )
 }

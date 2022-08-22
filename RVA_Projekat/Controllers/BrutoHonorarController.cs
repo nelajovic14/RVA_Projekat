@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using RVA_Projekat.Dogadjaji;
 using RVA_Projekat.Dto;
 using RVA_Projekat.Enums;
 using RVA_Projekat.Interface;
@@ -13,10 +14,12 @@ namespace RVA_Projekat.Controllers
     {
         private IBrutoHonorarService service;
         private INetohonorarService netohonorarService;
-        public BrutoHonorarController(IBrutoHonorarService service, INetohonorarService netohonorarService)
+        private ILoggerManager loggerManager; 
+        public BrutoHonorarController(IBrutoHonorarService service, INetohonorarService netohonorarService,ILoggerManager loggerManager)
         {
             this.service = service;
             this.netohonorarService = netohonorarService;
+            this.loggerManager = loggerManager;
         }
         [HttpGet]   
         public IActionResult Get()
@@ -69,14 +72,35 @@ namespace RVA_Projekat.Controllers
                     break;
                 }
             }
-            service.Delete(brutoHonorar);
-            return Ok();
+            try
+            {
+                service.Delete(brutoHonorar);
+                loggerManager.LogInformation(new Dogadjaj { dogadjaj = "Delete bruto", korisnik = dto.Korisnik, poruka = "SUCCES" });
+                return Ok();
+            }
+            catch
+            {
+                loggerManager.LogInformation(new Dogadjaj { dogadjaj = "Delete bruto", korisnik = dto.Korisnik, poruka = "ERROR" });
+                return BadRequest();
+            }
+            
         }
         [HttpPost("dodaj")]
         public IActionResult Dodaj([FromBody] BrutoHonorarDto dto)
         {
-            BrutoHonorar bh=service.DodajEntitet(dto);
+            
+            BrutoHonorar bh = service.DodajEntitet(dto);
+            loggerManager.LogInformation(new Dogadjaj { dogadjaj = "Add bruto", korisnik = dto.Korisnik, poruka = "SUCCES" });
             return Ok(bh);
         }
+        [HttpPost("izmeni")]
+        public IActionResult Izmeni([FromBody] BrutoHonorarDto dto)
+        {
+            BrutoHonorar bh=service.Edit(dto);
+            loggerManager.LogInformation(new Dogadjaj { dogadjaj = "Edit bruto", korisnik = dto.Korisnik, poruka = "SUCCES" });
+            return Ok(bh);
+        }
+        
+
     }
 }

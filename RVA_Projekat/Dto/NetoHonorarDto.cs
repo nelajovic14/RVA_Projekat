@@ -11,6 +11,6 @@ namespace RVA_Projekat.Dto
         public List<string> Porezi { get; set; }
         public string umanjenje { get; set; }
         public string uvecanje { get; set; }
-        public BrutoHonorar honorar { get; set; }
+        public string Korisnik { get; set; }
     }
 }

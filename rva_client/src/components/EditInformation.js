@@ -1,4 +1,4 @@
-import React from "react";
+import React,{useState} from "react";
 import { createAPIEndpointEdit } from "../api/index.js";
 import useForm from "../useForm";
 import * as ReactDOMClient from 'react-dom/client';
@@ -7,7 +7,7 @@ const getFreshModelObject=()=>({
     username:'',
     password:'',
     name:'',
-    lastname:''
+    lastname:'',
 })
 
 export default function Edit(props){
@@ -25,9 +25,9 @@ export default function Edit(props){
         values.password=props.password;
         values.name=props.name;
         values.lastname=props.lastname;
-        console.log("if "+values.name);
     }
-    console.log(values.name);
+    const [alertMessage,setAlert]=useState(<div></div>);
+
     const editovanje=e=>{
                 
         e.preventDefault();
@@ -36,8 +36,10 @@ export default function Edit(props){
             const root = ReactDOMClient.createRoot(container);
             createAPIEndpointEdit('users')
             .put(values)
-            .then(console.log("edit"))
-            .catch(err=>console.log(err))
+            .then(console.log("edit"),setAlert(<div class="alert alert-success">
+            <strong>Success!</strong> </div>))
+            .catch(err=>(console.log(err),setAlert(<div class="alert alert-danger">
+            <strong>Can't chane your info! {err}</strong> </div>)))
         }
     }
     let nameError="";
@@ -61,10 +63,13 @@ export default function Edit(props){
         return true;
     }
     return(
+        <div class="jumbotron text-center">
+            <h3>Change information about you : </h3><br/>
     <form onSubmit={editovanje}>                                  
-        Name : <input type={"text"} name='name' value={values.name} onChange={handleInputChanges}  ></input><br/>
-        Lastname : <input type={"text"} name='lastname' value={values.lastname} onChange={handleInputChanges}  ></input><br/>
-        <input type={"submit"} name='promeni' value={"Promeni"} onChange={handleInputChanges}></input><br/>
-    </form>
+        Name : <input type={"text"} name='name' value={values.name} onChange={handleInputChanges}  ></input><br/><br/>
+        Lastname : <input type={"text"} name='lastname' value={values.lastname} onChange={handleInputChanges}  ></input><br/><br/>
+        <input type={"submit"} name='promeni' value={"Change"} onChange={handleInputChanges}></input><br/>
+    </form><br/>{alertMessage}
+    </div>
     )
 }

@@ -20,6 +20,13 @@ namespace RVA_Projekat.Repository
             return entity;
         }
 
+        public NetoHonorar Edit(NetoHonorar nh)
+        {
+            _dbContext.Update(nh);
+            _dbContext.SaveChanges();
+            return nh;
+        }
+
         public NetoHonorar Find(int id)
         {
             NetoHonorar nh= _dbContext.NetoHonorars.Find(id);

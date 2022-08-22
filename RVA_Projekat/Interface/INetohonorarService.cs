@@ -10,5 +10,7 @@ namespace RVA_Projekat.Interface
         List<NetoHonorar> GetAll();
         NetoHonorar Get(int id);
         void Obrisi(NetoHonorar netoHonorar);
+        NetoHonorar Dodaj(NetoHonorar neto);
+        NetoHonorar Edit(NetoHonorarDto dto);
     }
 }

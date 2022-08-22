@@ -5,11 +5,13 @@ import * as ReactDOMClient from 'react-dom/client';
 import Result from "./Result.js";
 
 const getFreshModelObject=()=>({
-    trenutnaPlata:-1,
-    valuta:"RSD"
+    trenutnaPlata:0,
+    valuta:'',
+    korisnik:''
 })
 
 export default function DodajBrutoHonorar(props){
+    
     const {
         values,
         setValues,
@@ -18,11 +20,25 @@ export default function DodajBrutoHonorar(props){
         handleInputChanges
     } = useForm(getFreshModelObject)
 
+    
     const trenutnaPlata=useRef();
     const valuta=useRef();
+
+
+    const nazad =e=>{
+        e.preventDefault();
+        
+        const container = document.getElementById('root');
+        const root = ReactDOMClient.createRoot(container);
+        root.render(<Result username={props.username} password={props.password}/>)
+    }
+    
+
+
     const dodaj = e=>
     {        
         e.preventDefault();
+        values.korisnik=props.username;
         if(!trenutnaPlata.current.value){
             alert("Morate uneti platu")
             return;
@@ -37,34 +53,27 @@ export default function DodajBrutoHonorar(props){
 
         dodajBruto('brutohonorar')
         .post(values)
-        .then(alert("Bruto honorar je dodat"))
+        .then(res=>(alert("Bruto honorar je dodat")))
         .catch(err=>console.log(err))
     }
-
-    const nazad =e=>{
-        e.preventDefault();
-        
-        const container = document.getElementById('root');
-        const root = ReactDOMClient.createRoot(container);
-        root.render(<Result username={props.username} password={props.password}/>)
-    }
-
     return(
-    <div>
-            
+        <div class="container text-center">
+           <div class="alert alert-success"> <h3>Dodaj novi bruto honorar :</h3> </div><br/><br/>
         <form onSubmit={dodaj}> 
-            Trenutna plata : <input type={"number"} name='plata' ref={trenutnaPlata} ></input><br/>
+            Trenutna plata : <input type={"number"} name='plata' ref={trenutnaPlata} ></input><br/><br/>
             
             Valuta: <select ref={valuta}>
             <option value={"RSD"}>RSD</option>
             <option value={"EUR"}>EUR</option>
             <option value={"KM"}>KM</option>
-            </select> <br/><br/>
+            </select> <br/><br/><br/>
             
-            <input type={"submit"} name='dodaj' value={"Dodaj"} onChange={handleInputChanges}></input><br/>
+            <input type={"submit"} name='dodaj' value={"Dodaj"} class="btn btn-success"></input> &nbsp;&nbsp;
+             <input type={"button"} name='back' value={"Nazad"} onClick={nazad} class="btn btn-success"></input>
         </form>
-        <br/>
-        <input type={"button"} name='back' value={"Nazad"} onClick={nazad}></input><br/>
+        
     </div>
     )
+    
+    
 }

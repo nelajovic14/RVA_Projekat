@@ -1,4 +1,4 @@
-import React from 'react'
+import React,{useState} from 'react'
 import Register from './Register'
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Layout from './Layout';
@@ -10,12 +10,14 @@ import Logout from './Logout';
 import Neto from './NetoHonorari';
 import Bruto from './BrutoHonorari';
 import Zapolseni from "./Zaposleni.js"
+import Logs from './Logs';
 
 const getFreshModelObject=()=>({
     username:'',
     password:'',
     name:'',
-    lastname:''
+    lastName:'',
+    uloga:''
 })
 
 export default function Result(props){
@@ -32,22 +34,27 @@ export default function Result(props){
 
     values.username=props.username;
     values.password=props.password;
-    
+
+    if(values.name=='' && values.lastName==''){
     createAPIEndpointgetUser('users')
         .post(values)
-        .then(res=>(values.name=res.data.name,values.lastname=res.data.lastName,root.render(
+        .then(res=>(setValues(res.data),console.log(res.data),root.render(
 
-                    <BrowserRouter>
-                    <Routes>
-                    <Route path="/" element={<Layout />}>
-                      <Route path='Register' element={<Register />} />
-                      <Route path='EditInformation' element={<Edit name={values.name} lastname={values.lastname} username={values.username} password={values.password}/>} />
-                      <Route path='Login' element={<Logout />} />
-                      <Route path='NetoHonorari' element ={<Neto />}/>
-                      <Route path='BrutoHonorari' element ={<Bruto username={values.username} password={values.password}/>}/>
-                      <Route path='Zaposleni' element ={<Zapolseni />}/>
-                  </Route>
-                      </Routes>
-                      </BrowserRouter>
-              )))
+            <BrowserRouter>
+            <Routes>
+           <Route path="/" element={<Layout />}>      
+            <Route path='Register' element={<Register username={values.username} uloga={res.data.uloga}/>} />
+            <Route path='EditInformation'   element={<Edit name={res.data.name} lastname={res.data.lastName} username={values.username} password={values.password}/>} />
+            <Route path='Login' element={<Logout username={values.username} password={values.password}/>}  />
+            <Route path='NetoHonorari' element ={<Neto  username={values.username} password={values.password}/>} />
+            <Route path='BrutoHonorari' element ={<Bruto username={values.username} password={values.password}  />}/>
+            <Route path='Zaposleni' element ={<Zapolseni  username={values.username} password={values.password} />} />
+            <Route path='Logs' element ={<Logs  username={values.username} password={values.password} />} />
+          </Route>
+              </Routes>
+              </BrowserRouter>
+        ) ))
+
+    }
+    
 }

@@ -4,5 +4,6 @@ namespace RVA_Projekat.Interface
 {
     public interface IZaposleniRepository:IRepository<Zaposleni>
     {
+        Zaposleni Edit(Zaposleni zaposleni);
     }
 }

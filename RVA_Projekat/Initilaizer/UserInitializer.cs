@@ -9,12 +9,10 @@ namespace RVA_Projekat.Initilaizer
     public class UserInitializer:IUserInitializer
     {
         private IUserRepository userRepository;
-        private HonorarDbContext _dbContext;
 
         public UserInitializer(IUserRepository userRepository, HonorarDbContext dbContext)
         {
             this.userRepository = userRepository;
-            _dbContext = dbContext;
         }
 
         public void InitializeUseres()
@@ -23,13 +21,10 @@ namespace RVA_Projekat.Initilaizer
 
             if(users.Count > 0)
             {
-                if((userRepository.FindByUsername("admin") != null))
-                {
-                    return;
-                }
+                return;
             }
-            userRepository.Add(new User() { Username = "admin", Password = BCrypt.Net.BCrypt.HashPassword("admin"),Name="Admin",LastName="Admin"});
-            _dbContext.SaveChanges();
+            userRepository.Add(new User() { Username = "admin", Password = BCrypt.Net.BCrypt.HashPassword("admin"),Name="Admin",LastName="Admin",Role=Enums.Uloga.ADMIN});
+
         }
 
     }

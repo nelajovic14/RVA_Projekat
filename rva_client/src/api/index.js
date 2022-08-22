@@ -13,6 +13,17 @@ export const createAPIEndpoint = endpoint => {
     }
 }
 
+export const LogOutUser = endpoint => {
+    let url=BASE_URL+'api/'+endpoint+'/logout';
+    return{
+        fetch:()=> axios.get(url),
+        fetchById:id=>axios.get(url+id),
+        post: newRecord=>axios.post
+        (url,newRecord),
+        
+    }
+}
+
 export const createAPIEndpointRegister = endpoint => {
     let url=BASE_URL+'api/'+endpoint+'/register';
     return{
@@ -101,6 +112,17 @@ export const dodajBruto = endpoint => {
     }
 }
 
+export const izmeniBruto = endpoint => {
+    let url=BASE_URL+'api/'+endpoint+'/izmeni';
+    return{
+        fetch:()=> axios.get(url),
+        fetchById:id=>axios.get(url+id),
+        post: newRecord=>axios.post
+        (url,newRecord),
+        
+    }
+}
+
 export const obrisiZaposlenog = endpoint => {
     let url=BASE_URL+'api/'+endpoint+'/delete';
     return{
@@ -136,6 +158,61 @@ export const dodajZaposlenog = endpoint => {
 
 export const dodajNeto = endpoint => {
     let url=BASE_URL+'api/'+endpoint+'/dodaj';
+    return{
+        fetch:()=> axios.get(url),
+        fetchById:id=>axios.get(url+id),
+        post: newRecord=>axios.post
+        (url,newRecord),
+        
+    }
+}
+
+export const pretragaNeto = endpoint => {
+    let url=BASE_URL+'api/'+endpoint+'/pretraga';
+    return{
+        fetch:()=> axios.get(url),
+        fetchById:id=>axios.get(url+id),
+        post: newRecord=>axios.post
+        (url,newRecord),
+        
+    }
+}
+
+export const DuplirajNeto = (endpoint) => {
+    let url=BASE_URL+'api/'+endpoint+'/dupliraj'
+    return{
+        fetch:()=> axios.get(url),
+        fetchById:id=>axios.get(url+id),
+        post: newRecord=>axios.post
+        (url,newRecord),
+        
+    }
+}
+
+export const izmeniNeto = (endpoint) => {
+    let url=BASE_URL+'api/'+endpoint+'/izmeni'
+    return{
+        fetch:()=> axios.get(url),
+        fetchById:id=>axios.get(url+id),
+        post: newRecord=>axios.post
+        (url,newRecord),
+        
+    }
+}
+
+export const izmeniZapolsenog = (endpoint) => {
+    let url=BASE_URL+'api/'+endpoint+'/izmeni'
+    return{
+        fetch:()=> axios.get(url),
+        fetchById:id=>axios.get(url+id),
+        post: newRecord=>axios.post
+        (url,newRecord),
+        
+    }
+}
+
+export const getLogs = endpoint => {
+    let url=BASE_URL+'api/'+endpoint+'';
     return{
         fetch:()=> axios.get(url),
         fetchById:id=>axios.get(url+id),

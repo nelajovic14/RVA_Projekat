@@ -6,6 +6,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using log4net.Config;
+using Microsoft.AspNetCore.Builder;
+using System.IO;
+using Microsoft.Extensions.DependencyInjection;
+using RVA_Projekat.Dogadjaji;
 
 namespace RVA_Projekat
 {
@@ -13,7 +18,11 @@ namespace RVA_Projekat
     {
         public static void Main(string[] args)
         {
-            CreateHostBuilder(args).Build().Run();
+            var host=CreateHostBuilder(args).Build();
+            var logger = host.Services.GetRequiredService<ILoggerManager>();
+            logger.LogInformation(new Model.Dogadjaj { korisnik = "POCETAK", dogadjaj = "POCETAK", poruka = "POCETAK" });
+
+            host.Run();
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>

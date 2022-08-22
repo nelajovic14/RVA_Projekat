@@ -111,6 +111,9 @@ namespace RVA_Projekat.Migrations
                     b.Property<string>("LastName")
                         .HasColumnType("navarchar(30)");
 
+                    b.Property<int>("Role")
+                       .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.ToTable("Users");

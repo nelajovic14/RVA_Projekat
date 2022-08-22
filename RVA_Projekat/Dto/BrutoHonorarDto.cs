@@ -7,5 +7,6 @@ namespace RVA_Projekat.Dto
         public int Id { get; set; }
         public int TrenutnaPlata { get; set; }
         public string valuta { get; set; }
+        public string Korisnik { get; set; }
     }
 }

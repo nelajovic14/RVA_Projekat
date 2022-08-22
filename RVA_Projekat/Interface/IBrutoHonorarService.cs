@@ -12,5 +12,6 @@ namespace RVA_Projekat.Interface
         BrutoHonorar GetById(int id);
         void Delete(BrutoHonorar brutoHonorar);
         BrutoHonorar GetByPlataIValuta(int plata,Valuta v);
+        BrutoHonorar Edit(BrutoHonorarDto dto);
     }
 }

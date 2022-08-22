@@ -4,5 +4,6 @@ namespace RVA_Projekat.Interface
 {
     public interface IBrutoHonorarRepository:IRepository<BrutoHonorar>
     {
+        BrutoHonorar Edit(BrutoHonorar bh);
     }
 }

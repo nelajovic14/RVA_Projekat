@@ -22,6 +22,13 @@ namespace RVA_Projekat.Repository
             return entity;
         }
 
+        public Zaposleni Edit(Zaposleni zaposleni)
+        {
+             _dbContext.Zaposlenis.Update(zaposleni);
+            _dbContext.SaveChanges();
+            return zaposleni;
+        }
+
         public Zaposleni Find(int id)
         {
             Zaposleni z= _dbContext.Zaposlenis.Find(id);

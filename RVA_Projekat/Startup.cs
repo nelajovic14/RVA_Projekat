@@ -1,3 +1,4 @@
+
 using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -11,6 +12,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using RVA_Projekat.Dogadjaji;
 using RVA_Projekat.Infrastructure;
 using RVA_Projekat.Initilaizer;
 using RVA_Projekat.Interface;
@@ -109,6 +111,7 @@ namespace RVA_Projekat
             services.AddScoped<IZaposleniRepository, ZaposleniRepository>();
 
             services.AddScoped<IPorezRepository, PorezRepository>();
+            services.AddSingleton<ILoggerManager, LoggerManager>();
 
             var mapperConfig = new MapperConfiguration(mc =>
             {

@@ -1,8 +1,29 @@
 import React from "react";
-import Login from "./Login";
-import * as ReactDOMClient from 'react-dom/client';
+import { LogOutUser } from "../api";
+import useForm from "../useForm";
 
-export default function Logout(){
-    window.location.href="http://localhost:3000";
+const getFreshModelObject=()=>({
+    username:'',
+    password:''
+})
+
+export default function Logout(props){
+    
+    const {
+        values,
+        setValues,
+        errors,
+        setErrors,
+        handleInputChanges
+    } = useForm(getFreshModelObject)
+
+    if(values.username==''){
+        values.username=props.username;
+    }
+    LogOutUser('users')
+    .post(values)
+    .then(window.location.href="http://localhost:3000")
+
+    
 
 }

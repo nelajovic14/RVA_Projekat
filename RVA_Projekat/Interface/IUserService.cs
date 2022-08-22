@@ -7,7 +7,7 @@ namespace RVA_Projekat.Interface
     {
         string Login(UserDto dto);
         bool Register(UserRegisterDto dto);
-        void Edit(UserEditdto dto);
+        User Edit(UserEditdto dto);
         User Get(UserDto dto);
     }
 }
