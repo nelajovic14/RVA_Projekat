@@ -28,7 +28,7 @@ export default function Bruto(props){
     }
    
     const obrisi=(event,element)=>{
-       
+       element.korisnik=props.username;
         event.preventDefault();
         console.log("obrisi")
         obrisiBruto("brutohonorar")

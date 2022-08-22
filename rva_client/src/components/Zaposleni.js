@@ -26,7 +26,7 @@ export default function Zapolseni(props){
     }
 
     const obrisi=(event,element)=>{
-       
+        element.korisnik=props.username;
         event.preventDefault();
         obrisiZaposlenog("zaposleni")
         .post(element)

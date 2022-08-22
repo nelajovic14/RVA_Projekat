@@ -48,7 +48,7 @@ namespace RVA_Projekat.Dogadjaji
         public List<Dogadjaj> GetInfo(string username)
         {
             List<Dogadjaj> info = new List<Dogadjaj>();
-            string[] text = File.ReadAllLines(@"C:\Users\Korisnik\Desktop\RVA_Projekat\RVA_Projekat\Logs\logs.txt2022-08-21.txt");
+            string[] text = File.ReadAllLines(@"C:\Users\Korisnik\Desktop\RVA_Projekat\RVA_Projekat\Logs\log-file.txt");
             foreach(string line in text)
             {
                 if ((line.Split(':')[0]).Trim() == username)

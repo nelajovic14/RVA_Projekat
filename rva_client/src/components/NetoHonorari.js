@@ -93,7 +93,7 @@ export default function Neto(props){
     }
 
     const obrisi=(event,element)=>{
-       
+        element.korisnik=props.username;
         event.preventDefault();
         obrisiNeto("netohonorar")
         .post(element)

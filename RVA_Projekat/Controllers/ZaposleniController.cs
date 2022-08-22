@@ -34,7 +34,7 @@ namespace RVA_Projekat.Controllers
             try
             {
                 zaposleniService.Obrisi(zaposleni);
-                loggerManager.LogInformation(new Dogadjaj { dogadjaj = "Delete zaposleni", korisnik = "", poruka = "SUCCES" });
+                loggerManager.LogInformation(new Dogadjaj { dogadjaj = "Delete zaposleni", korisnik = dto.Korisnik, poruka = "SUCCES" });
             }
             catch
             {

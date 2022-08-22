@@ -32,7 +32,7 @@ export default function DodajNetoHonorar(props){
     const dodaj = e=>
     {        
         e.preventDefault();
-        values.korisnik='';
+        values.korisnik=props.username;
         if(!trenutnaPlata.current.value){
             alert("Morate uneti trenutnu platu")
             return;
