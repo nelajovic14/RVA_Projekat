@@ -112,7 +112,7 @@ namespace RVA_Projekat.Migrations
                         .HasColumnType("navarchar(30)");
 
                     b.Property<int>("Role")
-                       .HasColumnType("int");
+                       .HasColumnType("navarchar(10)");
 
                     b.HasKey("Id");
 
