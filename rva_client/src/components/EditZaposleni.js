@@ -77,7 +77,7 @@ export default function EditZaposleni(props){
         .then(res=>(console.log(res),values.id=props.id,values.ime=ime,values.godineIskustva=godine,values.brutoHonorarId=res.data.id,
         izmeniZapolsenog('zaposleni')
         .post(values)
-        .then(res=>(console.log(res.data)))
+        .then(res=>(console.log(res.data),alert("Podaci su promenjeni!")))
         ));
     }
     return(

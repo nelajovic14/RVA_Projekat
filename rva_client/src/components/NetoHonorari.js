@@ -5,6 +5,9 @@ import DodajNetoHonorar from "./DodajNetoHonorar"
 import * as ReactDOMClient from 'react-dom/client';
 import useForm from "../useForm";
 import IzmeniNetoHonorar from './EditNeto'
+import axios from 'axios'
+
+const BASE_URL="https://localhost:44386/";
 
 const getFreshModelObject=()=>({
     porezi:null,
@@ -97,9 +100,8 @@ export default function Neto(props){
         event.preventDefault();
         obrisiNeto("netohonorar")
         .post(element)
-        .then(setIsChanged(true),getNetos('netohonorar')
-        .post()
-        .then(response => (console.log(response.data),setElement(response.data),setIsChanged(true))))
+        .then(setIsChanged(true),axios.get(BASE_URL+'api/netohonorar')
+        .then(response => (setElement(response.data),setIsChanged(true))))
     }
 
     var brutoPrikaz=<div></div>;
@@ -116,12 +118,10 @@ export default function Neto(props){
     }
 
     if(isChanged){
+        axios.get(BASE_URL+'api/netohonorar')
+        .then(response => (setElement(response.data),setIsChanged(false)))
         
-        getNetos('netohonorar')
-        .post()
-        .then(response => (setIsChanged(false),console.log(response.data),setElement(response.data)))
-        
-        console.log("ele:"+isChanged)
+
     }
 
     const dupliraj=(event,element)=>{

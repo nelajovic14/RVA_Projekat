@@ -19,7 +19,7 @@ namespace RVA_Projekat.Controllers
             this.netohonorarService = netohonorarService;
             this.loggerManager = loggerManager;
         }
-        [HttpPost("get")]
+        [HttpGet]
         public List<NetoHonorarDto> Get(){
             List<NetoHonorar> netoHonorars= netohonorarService.GetAll();
             List<NetoHonorarDto> netoHonorarsdto = new List<NetoHonorarDto>();

@@ -212,14 +212,17 @@ namespace RVA_Projekat.Services
 
         public void Obrisi(NetoHonorar netoHonorar)
         {
-            List<Porez> porezs= PorezRepository.GetAll();
-            foreach(var p in porezs)
+            if (netoHonorar != null)
             {
-                if (p.NetoHonorarId == netoHonorar.Id)
-                    PorezRepository.Remove(p);
+                List<Porez> porezs = PorezRepository.GetAll();
+                foreach (var p in porezs)
+                {
+                    if (p.NetoHonorarId == netoHonorar.Id)
+                        PorezRepository.Remove(p);
+                }
+                PorezRepository.SaveAll();
+                netohonorarService.Remove(netoHonorar);
             }
-            PorezRepository.SaveAll();
-            netohonorarService.Remove(netoHonorar);
         }
 
 

@@ -60,7 +60,7 @@ export default function IzmeniBrutoHonorar(props){
         values.id=props.id;
         izmeniBruto('brutohonorar')
         .post(values)
-        .then(res=>(console.log(res)));
+        .then(res=>(console.log(res),alert("Podaci su promenjeni!")));
         }
         return(
                     <div class="container text-center">

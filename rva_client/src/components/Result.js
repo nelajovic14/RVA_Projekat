@@ -45,11 +45,11 @@ export default function Result(props){
            <Route path="/" element={<Layout />}>      
             <Route path='Register' element={<Register username={values.username} uloga={res.data.uloga}/>} />
             <Route path='EditInformation'   element={<Edit name={res.data.name} lastname={res.data.lastName} username={values.username} password={values.password}/>} />
-            <Route path='Login' element={<Logout username={values.username} password={values.password}/>}  />
-            <Route path='NetoHonorari' element ={<Neto  username={values.username} password={values.password}/>} />
-            <Route path='BrutoHonorari' element ={<Bruto username={values.username} password={values.password}  />}/>
-            <Route path='Zaposleni' element ={<Zapolseni  username={values.username} password={values.password} />} />
-            <Route path='Logs' element ={<Logs  username={values.username} password={values.password} />} />
+            <Route path='Login' element={<Logout username={values.username}/>}  />
+            <Route path='NetoHonorari' element ={<Neto  username={values.username} />} />
+            <Route path='BrutoHonorari' element ={<Bruto username={values.username}   />}/>
+            <Route path='Zaposleni' element ={<Zapolseni  username={values.username}  />} />
+            <Route path='Logs' element ={<Logs  username={values.username}/> } />
           </Route>
               </Routes>
               </BrowserRouter>

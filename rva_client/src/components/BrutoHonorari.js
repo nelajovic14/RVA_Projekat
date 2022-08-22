@@ -38,9 +38,6 @@ export default function Bruto(props){
         
     }
 
-
-
-
     if(isChanged){
         console.log(isChanged)
         axios.get(BASE_URL+'api/brutohonorar')
@@ -54,19 +51,12 @@ export default function Bruto(props){
         <td>{element.id}</td>
         <td >{element.trenutnaPlata}</td>
         <td >{element.valuta}</td>
-        <td>
-            <input type={"button"}  class="btn btn-link" onClick={(event)=>obrisi(event,element)}  value={"Obriši"}></input>
-        </td>
-        
-        <td >
-                <input type={"button"} class="btn btn-link" onClick={(event)=>edit(event,element)}  value={"Izmeni"}></input>
-            </td>
+        <td><input type={"button"}  class="btn btn-link" onClick={(event)=>obrisi(event,element)}  value={"Obriši"}></input></td>
+        <td ><input type={"button"} class="btn btn-link" onClick={(event)=>edit(event,element)}  value={"Izmeni"}></input></td>
         </tr>
         
     )
-
         return(
-
             <div class="container text-center">
                 
                 <div class="alert alert-info"><h1><strong>Bruto honorari</strong></h1><br/><br/>  </div>
@@ -76,11 +66,8 @@ export default function Bruto(props){
                     <td ><b>TRENUTNA PLATA</b></td>
                     <td ><b>VALUTA</b></td><td>&nbsp;</td><td>&nbsp;</td></tr></thead>
                 {elementi}
-            </table>
-            <br/>
-            <p>
+            </table><br/>
             <input type={"button"} onClick={(event)=>dodaj(event)}  value={"Dodaj"} class="btn btn-info"></input>
-            </p>
             </div>
         )
             

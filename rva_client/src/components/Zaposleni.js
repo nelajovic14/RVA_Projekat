@@ -31,7 +31,7 @@ export default function Zapolseni(props){
         obrisiZaposlenog("zaposleni")
         .post(element)
         .then(setIsChanged(true),axios.get(BASE_URL+'api/zaposleni')
-        .then(response => (console.log("response : "+response.data),setElements(response.data),setIsChanged(true))))
+        .then(response => (setElements(response.data),setIsChanged(true))))
         
     }
 
@@ -58,7 +58,7 @@ export default function Zapolseni(props){
     if(isChanged){
         
     axios.get(BASE_URL+'api/zaposleni')
-        .then(response => (console.log("response : "+response.data),setElements(response.data),setIsChanged(false)))
+        .then(response => (setElements(response.data),setIsChanged(false)))
 
     }
 

@@ -102,7 +102,7 @@ export default function IzmeniNetoHonorar(props){
         values.brutoHonorarId=res.data.id,
         izmeniNeto('netohonorar')
         .post(values)
-        .then(result=>(console.log(result)))));
+        .then(result=>(console.log(result),alert("Podaci su promenjeni!")))));
        
 
     }

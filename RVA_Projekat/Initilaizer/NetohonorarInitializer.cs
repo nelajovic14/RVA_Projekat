@@ -36,9 +36,9 @@ namespace RVA_Projekat.Initilaizer
                 nh3.BrutoHonorarId = bh.Id;
                 break;
             }
-            //repository.Add(nh);
-            //repository.Add(nh2);
-            //repository.Add(nh3);
+            repository.Add(nh);
+            repository.Add(nh2);
+            repository.Add(nh3);
             _dbContext.SaveChanges();
         }
     }
