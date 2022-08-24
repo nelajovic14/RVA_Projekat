@@ -10,12 +10,10 @@ namespace RVA_Projekat.Initilaizer
     {
         INetohonorarRepository repository;
         IBrutoHonorarRepository honorarRepository;
-        HonorarDbContext _dbContext;
 
-        public NetohonorarInitializer(INetohonorarRepository repository, HonorarDbContext dbDontext,IBrutoHonorarRepository brutoHonorarRepository)
+        public NetohonorarInitializer(INetohonorarRepository repository, IBrutoHonorarRepository brutoHonorarRepository)
         {
             this.repository = repository;
-            _dbContext = dbDontext;
             this.honorarRepository = brutoHonorarRepository;
         }
 
@@ -40,7 +38,6 @@ namespace RVA_Projekat.Initilaizer
             repository.Add(nh);
             repository.Add(nh2);
             repository.Add(nh3);
-            _dbContext.SaveChanges();
         }
     }
 }

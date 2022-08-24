@@ -10,12 +10,10 @@ namespace RVA_Projekat.Initilaizer
     {
         IZaposleniRepository repository;
         IBrutoHonorarRepository honorarRepository;
-        HonorarDbContext _dbContext;
 
-        public ZaposleniInitializer(IZaposleniRepository repository, HonorarDbContext dbContext,IBrutoHonorarRepository brutoHonorarRepository)
+        public ZaposleniInitializer(IZaposleniRepository repository, IBrutoHonorarRepository brutoHonorarRepository)
         {
             this.repository = repository;
-            _dbContext = dbContext;
             honorarRepository = brutoHonorarRepository;
         }
 
@@ -40,7 +38,6 @@ namespace RVA_Projekat.Initilaizer
             repository.Add(zaposleni1);
             repository.Add(zaposleni2);
             repository.Add(zaposleni3);
-            _dbContext.SaveChanges();
         }
     }
 }

@@ -1,9 +1,10 @@
 ﻿using RVA_Projekat.Enums;
+using RVA_Projekat.Interface;
 using System.Collections.Generic;
 
 namespace RVA_Projekat.Model
 {
-    public class NetoHonorar
+    public class NetoHonorar:IDupliranje<NetoHonorar>
     {
         public NetoHonorar()
         {
@@ -39,5 +40,25 @@ namespace RVA_Projekat.Model
         public Uvecanje uvecanje { get; set; }
         public int BrutoHonorarId { get; set; }
         public BrutoHonorar honorar { get; set; }
+
+        public NetoHonorar Dupliraj()
+        {
+            NetoHonorar newNeto = new NetoHonorar();
+            newNeto.umanjenje = this.umanjenje;
+            newNeto.uvecanje = this.uvecanje;
+            newNeto.Porezi = new List<Porez>();
+            if (this.Porezi != null)
+            {
+                foreach(var p in this.Porezi)
+                {
+                    newNeto.Porezi.Add(p.Dupliraj());
+                }
+            }
+            if (this.honorar != null)
+            {
+                newNeto.honorar=this.honorar.Dupliraj();
+            }
+            return newNeto;
+        }
     }
 }

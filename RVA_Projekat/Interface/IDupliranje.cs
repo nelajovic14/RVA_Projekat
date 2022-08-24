@@ -3,8 +3,8 @@ using RVA_Projekat.Model;
 
 namespace RVA_Projekat.Interface
 {
-    public interface IDupliranje
+    public interface IDupliranje<T>
     {
-        NetoHonorar Dupliraj(NetoHonorarDto honorar);
+        T Dupliraj();
     }
 }

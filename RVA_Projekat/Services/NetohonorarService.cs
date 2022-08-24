@@ -108,6 +108,37 @@ namespace RVA_Projekat.Services
         public NetoHonorar Dupliraj(NetoHonorarDto honorar)
         {
             NetoHonorar nh = netohonorarService.Find(honorar.Id);
+            BrutoHonorar bruto = brutoHonorarService.GetById(honorar.BrutoHonorarId);
+            nh.honorar = bruto;
+            /*List<Porez> porezs = new List<Porez>();
+            if (honorar.Porezi != null)
+            {
+                foreach (var p in honorar.Porezi)
+                {
+                    if (p == "POTROSNJA")
+                        porezs.Add(new Porez(Enums.PorezType.POTROSNJA, nh.Id));
+                    else if (p == "DOBIT")
+                        porezs.Add(new Porez(Enums.PorezType.DOBIT, nh.Id));
+                    else if (p == "DOHODAK")
+                        porezs.Add(new Porez(Enums.PorezType.DOHODAK, nh.Id));
+                    else if (p == "IMOVINA")
+                        porezs.Add(new Porez(Enums.PorezType.IMOVINA, nh.Id));
+
+                }
+            }
+            nh.Porezi= porezs;*/
+            List<Porez> porezs = PorezRepository.GetAll();
+            NetoHonorar newNeto = nh.Dupliraj();
+            BrutoHonorar newBruto= brutoHonorarService.Add(newNeto.honorar);
+            newNeto.BrutoHonorarId = newBruto.Id;
+            netohonorarService.Add(newNeto);
+            foreach(var p in newNeto.Porezi)
+            {
+                p.NetoHonorarId = newNeto.Id;
+                PorezRepository.Add(p);
+            }
+            return newNeto;
+            /*NetoHonorar nh = netohonorarService.Find(honorar.Id);
             NetoHonorar newNeto=new NetoHonorar { umanjenje=nh.umanjenje,uvecanje=nh.uvecanje };
             BrutoHonorar bruto= brutoHonorarService.GetById(honorar.BrutoHonorarId);
             BrutoHonorar bh= new BrutoHonorar { TrenutnaPlata = bruto.TrenutnaPlata, valuta = bruto.valuta };
@@ -141,7 +172,7 @@ namespace RVA_Projekat.Services
             }
             PorezRepository.SaveAll();
             neto.Porezi = porezs;
-            return neto;
+            return neto;*/
         }
 
         public NetoHonorar Edit(NetoHonorarDto dto)

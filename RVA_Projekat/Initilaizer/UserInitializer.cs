@@ -10,7 +10,7 @@ namespace RVA_Projekat.Initilaizer
     {
         private IUserRepository userRepository;
 
-        public UserInitializer(IUserRepository userRepository, HonorarDbContext dbContext)
+        public UserInitializer(IUserRepository userRepository)
         {
             this.userRepository = userRepository;
         }

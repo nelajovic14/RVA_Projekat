@@ -1,8 +1,9 @@
 ﻿using RVA_Projekat.Enums;
+using RVA_Projekat.Interface;
 
 namespace RVA_Projekat.Model
 {
-    public class Porez
+    public class Porez:IDupliranje<Porez>
     {
         public Porez()
         {
@@ -25,5 +26,11 @@ namespace RVA_Projekat.Model
         public PorezType Tip { get; set; }
         public int NetoHonorarId { get; set; }
 
+        public Porez Dupliraj()
+        {
+            Porez newPorez = new Porez();
+            newPorez.Tip = this.Tip;
+            return newPorez;
+        }
     }
 }

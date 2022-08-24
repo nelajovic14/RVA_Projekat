@@ -24,7 +24,9 @@ export default function DodajZaposlenog(props){
         handleInputChanges
     } = useForm(getFreshModelObject)
 
-
+    const config = {
+        headers: {  Authorization: 'Bearer ' +  localStorage.getItem('token'),}
+    };
 
     const ime=useRef();
     const godine=useRef();
@@ -64,9 +66,7 @@ export default function DodajZaposlenog(props){
         values.trenutnaPlata=trenutnaPlata.current.value;
         values.valuta=valuta.current.value;
 
-        const config = {
-            headers: {  Authorization: 'Bearer ' +  localStorage.getItem('token'),}
-        };
+        
           return axios 
                     .post(`${BASE_URL}api/brutohonorar`, values, config) 
                     .then(response =>(values.brutoHonorarId=response.data.id,axios 
