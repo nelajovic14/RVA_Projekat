@@ -19,19 +19,34 @@ export default function Zapolseni(props){
     const findBruto=(event,element)=>{
        
         event.preventDefault();
-        getBrutoFromZaposleni("brutohonorar")
-        .post(element)
-        .then(res=>(console.log(res.data),setBruto(res.data)))
-        
+
+        const config = {
+            headers: {  Authorization: 'Bearer ' +  localStorage.getItem('token'),}
+        };
+        return axios 
+            .post(`${BASE_URL}api/brutohonorar/getbrutoZaposleni`, element, config) 
+            .then(response =>(setBruto(response.data))) 
+            .catch(err=>alert(err)); 
+    
     }
 
     const obrisi=(event,element)=>{
         element.korisnik=props.username;
         event.preventDefault();
-        obrisiZaposlenog("zaposleni")
-        .post(element)
-        .then(setIsChanged(true),axios.get(BASE_URL+'api/zaposleni')
-        .then(response => (setElements(response.data),setIsChanged(true))))
+
+        axios.delete(`${BASE_URL}api/zaposleni`, {
+            headers: {
+                Authorization: 'Bearer ' +  localStorage.getItem('token'),
+            },
+            data: {
+              id:element.id,
+              ime:element.ime,
+              godineIskustva:element.godineIskustva,
+              brutoHonorarId:element.brutoHonorarId
+            }
+          })
+          .then(res=>(alert("obrisano"),setIsChanged(true)))
+          .catch(err=>alert(err))
         
     }
 
@@ -49,16 +64,32 @@ export default function Zapolseni(props){
 
     const edit=(event,element)=>{
         event.preventDefault();
-        getBrutoFromZaposleni("brutohonorar")
-        .post(element)
-        .then(res=>(console.log(res.data),
-        root.render(<EditZaposleni username={props.username} password={props.password} ime={element.ime} id={element.id} godineIskustva={element.godineIskustva} brutoId={res.data.id} trenutnaPlata={res.data.trenutnaPlata} valuta={res.data.valuta}/>)))
+        
+        const config = {
+            headers: {  Authorization: 'Bearer ' +  localStorage.getItem('token'),}
+        };
+        return axios 
+            .post(`${BASE_URL}api/brutohonorar/getbrutoZaposleni`, element, config) 
+            .then(res =>(root.render(<EditZaposleni username={props.username} password={props.password} ime={element.ime} id={element.id} godineIskustva={element.godineIskustva} brutoId={res.data.id} trenutnaPlata={res.data.trenutnaPlata} valuta={res.data.valuta}/>))) 
+            .catch(err=>alert(err));
     }
-    
+
+
+    const osvezi = e=>{
+        e.preventDefault();
+        setIsChanged(true);
+    }
+
     if(isChanged){
         
-    axios.get(BASE_URL+'api/zaposleni')
-        .then(response => (setElements(response.data),setIsChanged(false)))
+        axios.get(`${BASE_URL}api/zaposleni`, {
+            headers: {
+                Authorization: 'Bearer ' +  localStorage.getItem('token'),
+            }
+          })
+          .then(response => (setElements(response.data),setIsChanged(false)))
+          .catch(err=>alert(err))
+
 
     }
 
@@ -91,6 +122,8 @@ export default function Zapolseni(props){
         <br/>
         {brutoPrikaz} <br/><br/>
         <input type={"button"} onClick={(event)=>dodaj(event)} class="btn btn-danger" value={"Dodaj"}></input>         
+        <br/><br/>
+            <input type={"button"} onClick={(event)=>osvezi(event)} class="btn btn-danger" value={"Osveži"}></input>
         </div>
     )
 }

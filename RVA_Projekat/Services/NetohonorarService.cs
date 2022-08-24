@@ -1,5 +1,7 @@
 ﻿using RVA_Projekat.Dto;
 using RVA_Projekat.Interface;
+using RVA_Projekat.Interface.Bruto;
+using RVA_Projekat.Interface.Neto;
 using RVA_Projekat.Model;
 using System.Collections.Generic;
 
@@ -37,7 +39,7 @@ namespace RVA_Projekat.Services
             }
             else if (dto.uvecanje == "DVADESET")
             {
-                nh.uvecanje = Enums.Uvecanje.DVADEST;
+                nh.uvecanje = Enums.Uvecanje.DVADESET;
             }
             else if (dto.uvecanje == "PEDESET")
             {
@@ -62,7 +64,7 @@ namespace RVA_Projekat.Services
             }
             else if (dto.umanjenje == "DVADESET")
             {
-                nh.umanjenje = Enums.Umanjenje.DVADEST;
+                nh.umanjenje = Enums.Umanjenje.DVADESET;
             }
             else if (dto.umanjenje == "PEDESET")
             {
@@ -77,6 +79,8 @@ namespace RVA_Projekat.Services
                 nh.umanjenje = Enums.Umanjenje.STO;
             }
             nh.BrutoHonorarId = dto.BrutoHonorarId;
+            if (brutoHonorarService.GetById(dto.BrutoHonorarId) != null)
+                nh.honorar = brutoHonorarService.GetById(dto.BrutoHonorarId);
             //nh.honorar = brutoHonorarService.GetById(dto.BrutoHonorarId);
             netohonorarService.Add(nh);
             List<Porez> porezs = new List<Porez>();
@@ -101,6 +105,45 @@ namespace RVA_Projekat.Services
             return nh;
         }
 
+        public NetoHonorar Dupliraj(NetoHonorarDto honorar)
+        {
+            NetoHonorar nh = netohonorarService.Find(honorar.Id);
+            NetoHonorar newNeto=new NetoHonorar { umanjenje=nh.umanjenje,uvecanje=nh.uvecanje };
+            BrutoHonorar bruto= brutoHonorarService.GetById(honorar.BrutoHonorarId);
+            BrutoHonorar bh= new BrutoHonorar { TrenutnaPlata = bruto.TrenutnaPlata, valuta = bruto.valuta };
+            BrutoHonorar newBruto= brutoHonorarService.Add(bh);
+            newNeto.BrutoHonorarId = newBruto.Id;
+            newNeto.honorar = newBruto;
+            
+            
+            NetoHonorar neto= netohonorarService.Add(newNeto);
+            List<Porez> porezs = new List<Porez>();
+            if (honorar.Porezi != null)
+            {
+                foreach (var p in honorar.Porezi)
+                {
+
+                    
+                    if (p == "POTROSNJA")
+                        porezs.Add(new Porez(Enums.PorezType.POTROSNJA, neto.Id));
+                    else if (p == "DOBIT")
+                        porezs.Add(new Porez(Enums.PorezType.DOBIT, neto.Id));
+                    else if (p == "DOHODAK")
+                        porezs.Add(new Porez(Enums.PorezType.DOHODAK, neto.Id));
+                    else if (p == "IMOVINA")
+                        porezs.Add(new Porez(Enums.PorezType.IMOVINA, neto.Id));
+
+                }
+            }
+            foreach(var p in porezs)
+            {
+                PorezRepository.Add(p);
+            }
+            PorezRepository.SaveAll();
+            neto.Porezi = porezs;
+            return neto;
+        }
+
         public NetoHonorar Edit(NetoHonorarDto dto)
         {
             NetoHonorar nh = netohonorarService.Find(dto.Id);
@@ -114,7 +157,7 @@ namespace RVA_Projekat.Services
             }
             else if (dto.uvecanje == "DVADESET")
             {
-                nh.uvecanje = Enums.Uvecanje.DVADEST;
+                nh.uvecanje = Enums.Uvecanje.DVADESET;
             }
             else if (dto.uvecanje == "PEDESET")
             {
@@ -139,7 +182,7 @@ namespace RVA_Projekat.Services
             }
             else if (dto.umanjenje == "DVADESET")
             {
-                nh.umanjenje = Enums.Umanjenje.DVADEST;
+                nh.umanjenje = Enums.Umanjenje.DVADESET;
             }
             else if (dto.umanjenje == "PEDESET")
             {
@@ -184,9 +227,9 @@ namespace RVA_Projekat.Services
             return editovan;
         }
 
-        public NetoHonorar Get(int id)
+        public NetoHonorar Get(NetoHonorarDto dto)
         {
-            NetoHonorar nh= netohonorarService.Find(id);
+            NetoHonorar nh= netohonorarService.Find(dto.Id);
             if (nh == null)
                 return null;
             nh.Porezi = new List<Porez>();

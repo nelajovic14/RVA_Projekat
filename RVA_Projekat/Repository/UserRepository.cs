@@ -1,9 +1,8 @@
 ﻿using RVA_Projekat.Infrastructure;
-using RVA_Projekat.Interface;
+using RVA_Projekat.Interface.InterfaceUser;
 using RVA_Projekat.Model;
 using System;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -21,6 +20,13 @@ namespace RVA_Projekat.Repository
             _dbContext.Users.Add(entity);
             _dbContext.SaveChanges();
             return entity;
+        }
+
+        public User Edit(User user)
+        {
+            _dbContext.Users.Update(user);
+            _dbContext.SaveChanges();
+            return user;
         }
 
         public User Find(int id)

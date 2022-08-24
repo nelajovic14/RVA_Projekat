@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using RVA_Projekat.Dogadjaji;
 using RVA_Projekat.Dto;
 using RVA_Projekat.Enums;
-using RVA_Projekat.Interface;
+using RVA_Projekat.Interface.Bruto;
+using RVA_Projekat.Interface.Neto;
 using RVA_Projekat.Model;
 using System.Collections.Generic;
 
@@ -21,7 +23,8 @@ namespace RVA_Projekat.Controllers
             this.netohonorarService = netohonorarService;
             this.loggerManager = loggerManager;
         }
-        [HttpGet]   
+        [HttpGet]
+        [Authorize(Roles ="user")]
         public IActionResult Get()
         {
             List<BrutoHonorar> brutoHonorars = service.GetAll();
@@ -33,13 +36,14 @@ namespace RVA_Projekat.Controllers
             return Ok(brutoHonorarDto);
         }
         [HttpPost("getbruto")]
-        public IActionResult getbruto([FromBody]NetoHonorarDto dto)
+        [Authorize(Roles ="user")]
+        public IActionResult GetBruto([FromBody]NetoHonorarDto dto)
         {
             List<BrutoHonorar> brutoHonorars = service.GetAll();
-            NetoHonorar neto = netohonorarService.Get(dto.Id);
+            //NetoHonorar neto = netohonorarService.Get(dto.Id);
             foreach (var bh in brutoHonorars)
             {
-                if (bh.Id == neto.BrutoHonorarId)
+                if (bh.Id == dto.BrutoHonorarId)
                 {
                     return Ok(new BrutoHonorarDto { Id = bh.Id, TrenutnaPlata = bh.TrenutnaPlata, valuta = bh.valuta.ToString() });
                 }
@@ -47,7 +51,8 @@ namespace RVA_Projekat.Controllers
             return Ok();
         }
         [HttpPost("getbrutoZaposleni")]
-        public IActionResult getbrutoZaposleni([FromBody] Zaposleni dto)
+        [Authorize(Roles ="user")]
+        public IActionResult GetBrutoZaposleni([FromBody] ZaposleniDto dto)
         {
             List<BrutoHonorar> brutoHonorars = service.GetAll();
             foreach (var bh in brutoHonorars)
@@ -59,10 +64,11 @@ namespace RVA_Projekat.Controllers
             }
             return Ok();
         }
-        [HttpPost("delete")]
+        [HttpDelete]
+        [Authorize(Roles ="user")]
         public IActionResult Delete([FromBody] BrutoHonorarDto dto)
         {
-            BrutoHonorar brutoHonorar = service.GetById(dto.Id);
+            BrutoHonorar brutoHonorar = service.Get(dto);
             List<NetoHonorar> netoHonorars = netohonorarService.GetAll();
             foreach(NetoHonorar nh in netoHonorars)
             {
@@ -85,16 +91,18 @@ namespace RVA_Projekat.Controllers
             }
             
         }
-        [HttpPost("dodaj")]
-        public IActionResult Dodaj([FromBody] BrutoHonorarDto dto)
+        [HttpPost]
+        [Authorize(Roles = "user")]
+        public IActionResult Post([FromBody] BrutoHonorarDto dto)
         {
             
             BrutoHonorar bh = service.DodajEntitet(dto);
             loggerManager.LogInformation(new Dogadjaj { dogadjaj = "Add bruto", korisnik = dto.Korisnik, poruka = "SUCCES" });
             return Ok(bh);
         }
-        [HttpPost("izmeni")]
-        public IActionResult Izmeni([FromBody] BrutoHonorarDto dto)
+        [HttpPut]
+        [Authorize(Roles = "user")]
+        public IActionResult Put([FromBody] BrutoHonorarDto dto)
         {
             BrutoHonorar bh=service.Edit(dto);
             loggerManager.LogInformation(new Dogadjaj { dogadjaj = "Edit bruto", korisnik = dto.Korisnik, poruka = "SUCCES" });

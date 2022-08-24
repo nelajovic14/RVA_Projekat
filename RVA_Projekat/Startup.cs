@@ -16,6 +16,10 @@ using RVA_Projekat.Dogadjaji;
 using RVA_Projekat.Infrastructure;
 using RVA_Projekat.Initilaizer;
 using RVA_Projekat.Interface;
+using RVA_Projekat.Interface.Bruto;
+using RVA_Projekat.Interface.InterfaceUser;
+using RVA_Projekat.Interface.InterfaceZaposlenih;
+using RVA_Projekat.Interface.Neto;
 using RVA_Projekat.Mapping;
 using RVA_Projekat.Repository;
 using RVA_Projekat.Services;
@@ -29,6 +33,7 @@ namespace RVA_Projekat
 {
     public class Startup
     {
+        private readonly string _cors = "cors";
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -69,11 +74,7 @@ namespace RVA_Projekat
                         new string[]{}
                     }
                 });
-            });
-
-            services.AddAuthorization(options =>
-            {
-                options.AddPolicy("SamoOdabrani", policy => policy.RequireClaim("Neki_moj_claim")); //Ovde mozemo kreirati pravilo za validaciju nekog naseg claima
+                
             });
 
             services.AddAuthentication(opt =>
@@ -82,18 +83,30 @@ namespace RVA_Projekat
                 opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
             }).AddJwtBearer(options =>
             {
-                options.SaveToken=true;
                 options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
                 {
                     ValidateIssuer = true,
                     ValidateAudience = false,
                     ValidateLifetime = true,
                     ValidateIssuerSigningKey = true,
-                    ValidIssuer = "http://localhost:44398",
+                    ValidIssuer = "http://localhost:44386",
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["SecretKey"]))
                 };
             });
+            services.AddCors(options =>
+            {
+                options.AddPolicy(name: _cors, builder => {
+                    builder.WithOrigins("http://localhost:3000")//Ovde navodimo koje sve aplikacije smeju kontaktirati nasu,u ovom slucaju nas Angular front
+                           .AllowAnyHeader()
+                           .AllowAnyMethod()
+                           .AllowCredentials();
+                });
+            });
 
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("user", policy => policy.RequireClaim("user")); //Ovde mozemo kreirati pravilo za validaciju nekog naseg claima
+            });
 
             services.AddScoped<IUserInitializer, UserInitializer>();
             services.AddScoped<INetohonorarInitializer, NetohonorarInitializer>();
@@ -125,6 +138,7 @@ namespace RVA_Projekat
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -136,9 +150,7 @@ namespace RVA_Projekat
                 });
 
             }
-            app.UseCors(options =>
-                options.WithOrigins("http://localhost:3000")
-                .AllowAnyMethod().AllowAnyHeader());
+       
 
             using (var scope = app.ApplicationServices.CreateScope())
             {
@@ -151,7 +163,9 @@ namespace RVA_Projekat
             app.UseHttpsRedirection();
 
             app.UseRouting();
+            app.UseCors(_cors);
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

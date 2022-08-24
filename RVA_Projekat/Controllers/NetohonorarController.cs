@@ -1,9 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using RVA_Projekat.Dogadjaji;
 using RVA_Projekat.Dto;
 using RVA_Projekat.Enums;
-using RVA_Projekat.Interface;
+using RVA_Projekat.Interface.Bruto;
+using RVA_Projekat.Interface.Neto;
 using RVA_Projekat.Model;
+using System;
 using System.Collections.Generic;
 
 namespace RVA_Projekat.Controllers
@@ -12,15 +15,19 @@ namespace RVA_Projekat.Controllers
     [ApiController]
     public class NetohonorarController : ControllerBase
     {
+        
         private INetohonorarService netohonorarService;
         private ILoggerManager loggerManager;
-        public NetohonorarController(INetohonorarService netohonorarService,ILoggerManager loggerManager)
+        private IBrutoHonorarService brutohonorarService;
+        public NetohonorarController(INetohonorarService netohonorarService,ILoggerManager loggerManager,IBrutoHonorarService brutoHonorarService)
         {
             this.netohonorarService = netohonorarService;
             this.loggerManager = loggerManager;
+            brutohonorarService = brutoHonorarService;
         }
         [HttpGet]
-        public List<NetoHonorarDto> Get(){
+        [Authorize(Roles ="user")]
+        public IActionResult Get(){
             List<NetoHonorar> netoHonorars= netohonorarService.GetAll();
             List<NetoHonorarDto> netoHonorarsdto = new List<NetoHonorarDto>();
             
@@ -34,14 +41,15 @@ namespace RVA_Projekat.Controllers
                         porezs.Add(p.Tip.ToString());
                     }
                 }
-                netoHonorarsdto.Add(new NetoHonorarDto { Id=nh.Id,umanjenje=nh.umanjenje.ToString(),uvecanje=nh.uvecanje.ToString(),Porezi=porezs });
+                netoHonorarsdto.Add(new NetoHonorarDto { Id=nh.Id,umanjenje=nh.umanjenje.ToString(),uvecanje=nh.uvecanje.ToString(),Porezi=porezs,BrutoHonorarId=nh.BrutoHonorarId });
             }
-            return netoHonorarsdto;
+            return Ok(netoHonorarsdto);
         }
-        [HttpPost("delete")]
+        [HttpDelete]
+        [Authorize(Roles ="user")]
         public IActionResult Delete([FromBody] NetoHonorarDto dto)
         {
-            NetoHonorar netoHonorar=netohonorarService.Get(dto.Id);
+            NetoHonorar netoHonorar=netohonorarService.Get(dto);
             try
             {
                 netohonorarService.Obrisi(netoHonorar);
@@ -53,32 +61,34 @@ namespace RVA_Projekat.Controllers
             }
             return Ok();
         }
-        [HttpPost("dodaj")]
-        public IActionResult Dodaj([FromBody] NetoHonorarDto dto)
+        [HttpPost]
+        [Authorize(Roles ="user")]
+        public IActionResult Post([FromBody] NetoHonorarDto dto)
         {
             NetoHonorar nh=netohonorarService.DodajEntitet(dto);
             loggerManager.LogInformation(new Dogadjaj { dogadjaj = "Add neto", korisnik = dto.Korisnik, poruka = "SUCCES" });
             return Ok(nh);
         }
         [HttpPost("dupliraj")]
+        [Authorize(Roles ="user")]
         public IActionResult Dupliraj([FromBody] NetoHonorarDto netoHonorar)
         {
-            NetoHonorar netoHon = netohonorarService.Get(netoHonorar.Id);
-            NetoHonorarDto dto = new NetoHonorarDto{ BrutoHonorarId=netoHon.BrutoHonorarId, Porezi=netoHonorar.Porezi, umanjenje=netoHonorar.umanjenje, uvecanje=netoHonorar.uvecanje};            
-            NetoHonorar neto = netohonorarService.DodajEntitet(dto);
-            loggerManager.LogInformation(new Dogadjaj { dogadjaj = "Duplicate neto", korisnik = netoHonorar.Korisnik, poruka = "SUCCES" });
-            return Ok(neto);
+            NetoHonorar nh= netohonorarService.Dupliraj(netoHonorar);
+            loggerManager.LogInformation(new Dogadjaj { dogadjaj = "Duplicate Neto", korisnik = netoHonorar.Korisnik, poruka = "SUCCES" });
+            return Ok(nh);
         }
 
-        [HttpPost("izmeni")]
-        public IActionResult Izmeni([FromBody] NetoHonorarDto dto)
-        {
+        [HttpPut]
+        [Authorize(Roles ="user")]
+        public IActionResult Put([FromBody] NetoHonorarDto dto)
+        {           
             NetoHonorar nh= netohonorarService.Edit(dto);
             loggerManager.LogInformation(new Dogadjaj { dogadjaj = "Edit neto", korisnik = dto.Korisnik, poruka = "SUCCES" });
             return Ok(nh);
         }
 
         [HttpPost("pretraga")]
+        [Authorize(Roles ="user")]
         public IActionResult Pretrazi([FromBody] PodaciZaPretragu podaci)
         {
             List<NetoHonorar> netoHonorars = netohonorarService.GetAll();

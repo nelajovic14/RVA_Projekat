@@ -1,8 +1,10 @@
 import React,{useRef} from "react";
-import { dodajNeto,dodajBruto } from "../api/index.js";
 import useForm from "../useForm";
 import * as ReactDOMClient from 'react-dom/client';
 import Result from "./Result.js";
+import axios from 'axios'
+
+export const BASE_URL="https://localhost:44386/";
 
 const getFreshModelObject=()=>({
     porezi:{},
@@ -47,15 +49,16 @@ export default function DodajNetoHonorar(props){
         values.trenutnaPlata=trenutnaPlata.current.value;
         values.valuta=valuta.current.value;
 
-        dodajBruto('brutohonorar')
-        .post(values)
-        .then(res=>(values.brutoHonorarId=res.data.id, dodajNeto('netohonorar')
-            .post(values)
-            .then(res=>(console.log(res,res.data), alert("Novi neto honorar je dodat")))
-            .catch(err=>console.log(err))))
-        .catch(err=>console.log(err))
-
-       
+        const config = {
+            headers: {  Authorization: 'Bearer ' +  localStorage.getItem('token'),}
+        };
+          return axios 
+                    .post(`${BASE_URL}api/brutohonorar`, values, config) 
+                    .then(response =>(values.brutoHonorarId=response.data.id,axios 
+                        .post(`${BASE_URL}api/netohonorar`, values, config) 
+                        .then(res=>alert("Novi neto honorr je dodan")) 
+                        .catch(err=>alert(err)))) 
+                    .catch(err=>alert(err));
     }
 
     const nazad =e=>{

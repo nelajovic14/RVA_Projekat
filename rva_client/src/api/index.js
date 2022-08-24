@@ -24,17 +24,7 @@ export const LogOutUser = endpoint => {
     }
 }
 
-export const createAPIEndpointRegister = endpoint => {
-    let url=BASE_URL+'api/'+endpoint+'/register';
-    return{
-        fetch:()=> axios.get(url),
-        fetchById:id=>axios.get(url+id),
-        post: newRecord=>axios.post
-        (url,newRecord),
-        
-    }
-}
-
+ 
 export const createAPIEndpointEdit = endpoint => {
     let url=BASE_URL+'api/'+endpoint+'/';
     return{
@@ -90,16 +80,7 @@ export const obrisiNeto = endpoint => {
     }
 }
 
-export const obrisiBruto = endpoint => {
-    let url=BASE_URL+'api/'+endpoint+'/delete';
-    return{
-        fetch:()=> axios.get(url),
-        fetchById:id=>axios.get(url+id),
-        post: newRecord=>axios.post
-        (url,newRecord),
-        
-    }
-}
+
 
 export const dodajBruto = endpoint => {
     let url=BASE_URL+'api/'+endpoint+'/dodaj';

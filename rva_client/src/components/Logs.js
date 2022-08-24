@@ -1,6 +1,9 @@
 import React,{useState} from "react";
 import {getLogs} from '../api/index'
 import useForm from "../useForm";
+import axios from 'axios'
+
+const BASE_URL="https://localhost:44386/";
 
 const getFreshModelObject=()=>({
     username:'',
@@ -21,9 +24,13 @@ export default function Logs(props){
     }
     const [lista,setListu]=useState([]);
 
-    getLogs('logger')
-    .post(values)
-    .then(res=>(setListu(res.data)))
+    const config = {
+        headers: {  Authorization: 'Bearer ' +  localStorage.getItem('token'),}
+    };
+    axios 
+        .post(`${BASE_URL}api/logger`, values, config) 
+        .then(response =>(setListu(response.data))) 
+        .catch(err=>alert(err)); 
 
     const elementi=lista.map((element)=>
         <tr><td>{element.dogadjaj}</td><td>{element.poruka}</td></tr>

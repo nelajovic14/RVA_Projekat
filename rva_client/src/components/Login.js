@@ -33,12 +33,11 @@ export default function Login(){
                 var decoded='';
                 createAPIEndpoint('users')
                 .post(values)
-                .then(res=>(console.log(res),decoded=jwt_decode(res.data),decoded,root.render(<Result username={values.username} password={values.password} />)))
+                .then(res=>(console.log(res.data),decoded=jwt_decode(res.data),localStorage.setItem('token',res.data),root.render(<Result username={values.username} password={values.password} />)))
                 .catch(err=>(console.log("error:"+err),setAlert(<div class="alert alert-danger">
                 <strong>Wrong username or password!</strong> 
               </div>)))
-
-
+               
             }
         }
         let nameError = "";

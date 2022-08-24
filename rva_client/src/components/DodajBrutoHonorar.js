@@ -1,8 +1,10 @@
 import React,{useRef} from "react";
-import { dodajBruto } from "../api/index.js";
 import useForm from "../useForm";
 import * as ReactDOMClient from 'react-dom/client';
 import Result from "./Result.js";
+import axios from 'axios'
+
+const BASE_URL="https://localhost:44386/";
 
 const getFreshModelObject=()=>({
     trenutnaPlata:0,
@@ -51,10 +53,14 @@ export default function DodajBrutoHonorar(props){
         values.trenutnaPlata=trenutnaPlata.current.value;
         values.valuta=valuta.current.value;
 
-        dodajBruto('brutohonorar')
-        .post(values)
-        .then(res=>(alert("Bruto honorar je dodat")))
-        .catch(err=>console.log(err))
+          const config = {
+            headers: {  Authorization: 'Bearer ' +  localStorage.getItem('token'),}
+        };
+          return axios 
+                    .post(`${BASE_URL}api/brutohonorar`, values, config) 
+                    .then(response =>(alert("Bruto honorar je dodat"))) 
+                    .catch(err=>alert(err)); 
+
     }
     return(
         <div class="container text-center">

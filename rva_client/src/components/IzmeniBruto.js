@@ -1,8 +1,10 @@
 import React,{useRef, useState} from "react";
-import {  izmeniBruto} from "../api/index.js";
 import * as ReactDOMClient from 'react-dom/client';
 import Result from "./Result.js";
 import useForm from "../useForm";
+import axios from 'axios'
+
+export const BASE_URL="https://localhost:44386/";
 
 const getFreshModelObject=()=>({
     trenutnaPlata:0,
@@ -53,15 +55,22 @@ export default function IzmeniBrutoHonorar(props){
 
         const izmeni=e=>
         {
-        e.preventDefault();
-        values.korisnik=props.username;
-        values.trenutnaPlata=plata;
-        values.valuta=val;
-        values.id=props.id;
-        izmeniBruto('brutohonorar')
-        .post(values)
-        .then(res=>(console.log(res),alert("Podaci su promenjeni!")));
+            e.preventDefault();
+            values.korisnik=props.username;
+            values.trenutnaPlata=plata;
+            values.valuta=val;
+            values.id=props.id;
+
+            const config = {
+                headers: {  Authorization: 'Bearer ' +  localStorage.getItem('token'),}
+            };
+          return axios 
+            .put(`${BASE_URL}api/brutohonorar`, values, config) 
+            .then(res=>alert("Bruto honorar je izmenjen")) 
+            .catch(err=>alert(err)); 
+
         }
+
         return(
                     <div class="container text-center">
                     <div class="alert alert-success"> <h3>Izmeni bruto honorar :</h3> </div><br/><br/>

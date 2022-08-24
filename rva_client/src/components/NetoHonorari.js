@@ -1,5 +1,5 @@
 import React from "react";
-import {useState,useRef} from "react";
+import {useState,useRef,setValue} from "react";
 import { getBrutoFromNeto,getNetos,obrisiNeto,pretragaNeto,DuplirajNeto } from "../api/index.js";
 import DodajNetoHonorar from "./DodajNetoHonorar"
 import * as ReactDOMClient from 'react-dom/client';
@@ -31,9 +31,6 @@ export default function Neto(props){
     const [elements, setElement] = useState([]);
     const [brutoElement, setBruto]=useState(null)
     const [isChanged,setIsChanged]=useState(true)
-    const [pretrazeni,setPretrazene]=useState([])
-   const [prikazPretrazenih,setPrikaz]=useState(<div></div>)
-
    
    const container = document.getElementById('root');
    const root = ReactDOMClient.createRoot(container);
@@ -41,8 +38,6 @@ export default function Neto(props){
     const porezi=useRef();
     const uvecanje=useRef();
     const umanjenje=useRef();
-
-
 
     const pretraga =e=>{
         e.preventDefault();
@@ -68,10 +63,14 @@ export default function Neto(props){
             values.umanjenje=null;
         }
 
-        pretragaNeto('netohonorar')
-        .post(values)
-        .then(response=>(console.log(response.data),setElement(response.data)))
 
+        const config = {
+            headers: {  Authorization: 'Bearer ' +  localStorage.getItem('token'),}
+        };
+          return axios 
+                    .post(`${BASE_URL}api/netohonorar/pretraga`, values, config) 
+                    .then(response =>(setElement(response.data))) 
+                    .catch(err=>alert(err)); 
         
     }
 
@@ -89,19 +88,36 @@ export default function Neto(props){
     const findBruto=(event,element)=>{
        
         event.preventDefault();
-        getBrutoFromNeto("brutohonorar")
-        .post(element)
-        .then(res=>(console.log(res.data),setBruto(res.data)))
+
+        const config = {
+            headers: {  Authorization: 'Bearer ' +  localStorage.getItem('token'),}
+        };
+        return axios 
+            .post(`${BASE_URL}api/brutohonorar/getbruto`, element, config) 
+            .then(response =>(setBruto(response.data))) 
+            .catch(err=>alert(err)); 
+
         
     }
 
     const obrisi=(event,element)=>{
-        element.korisnik=props.username;
+
         event.preventDefault();
-        obrisiNeto("netohonorar")
-        .post(element)
-        .then(setIsChanged(true),axios.get(BASE_URL+'api/netohonorar')
-        .then(response => (setElement(response.data),setIsChanged(true))))
+        axios.delete(`${BASE_URL}api/netohonorar`, {
+            headers: {
+                Authorization: 'Bearer ' +  localStorage.getItem('token'),
+            },
+            data: {
+              id:element.id,
+              uvecanje:element.uvecanje,
+              umanjenje:element.umanjenje,
+              porezi:element.porezi,
+              korisnik:props.username
+            }
+          })
+          .then(response=>(alert("obrisano"),setIsChanged(true)))
+          .catch(err=>alert(err))
+
     }
 
     var brutoPrikaz=<div></div>;
@@ -116,38 +132,49 @@ export default function Neto(props){
         )
         return ispis;
     }
-
+    const osvezi = e=>{
+        e.preventDefault();
+        setIsChanged(true);
+    }
     if(isChanged){
-        axios.get(BASE_URL+'api/netohonorar')
-        .then(response => (setElement(response.data),setIsChanged(false)))
-        
+
+        axios.get(`${BASE_URL}api/netohonorar`, {
+            headers: {
+                Authorization: 'Bearer ' +  localStorage.getItem('token'),
+            }
+          })
+          .then(response => (setElement(response.data),setIsChanged(false)))
+          .catch(err=>alert(err))
 
     }
 
     const dupliraj=(event,element)=>{
         event.preventDefault();
-        console.log(element);
-        DuplirajNeto('netohonorar')
-        .post(element)
-        .then(
-            getNetos('netohonorar')
-        .post()
-        .then(response => (console.log(response.data),setElement(response.data),setIsChanged(true)))
-
-        );
+        element.korisnik=props.username;
+        console.log("porezi : "+element.porezi);
+        const config = {
+            headers: {  Authorization: 'Bearer ' +  localStorage.getItem('token'),}
+        };
+        return axios 
+            .post(`${BASE_URL}api/netohonorar/dupliraj`, element, config) 
+            .then(response =>(setIsChanged(true),alert("Duplirano"))) 
+            .catch(err=>alert(err));
+            
     }
-
+    
     const izmeni=(event,element)=>{
         event.preventDefault();
 
-        getBrutoFromNeto("brutohonorar")
-        .post(element)
-        .then(res=>(console.log(res.data),root.render(<IzmeniNetoHonorar username={props.username} password={props.password} uvecanje={element.uvecanje} umanjenje={element.umanjenje} 
-            porezi={element.porezi} id={element.id} idBruta={res.data.id} valuta={res.data.valuta} trenutnaPlata={res.data.trenutnaPlata} />)))
-
+        const config = {
+            headers: {  Authorization: 'Bearer ' +  localStorage.getItem('token'),}
+        };
+        return axios 
+            .post(`${BASE_URL}api/brutohonorar/getbruto`, element, config) 
+            .then(res=>(console.log(res.data),root.render(<IzmeniNetoHonorar username={props.username} password={props.password} uvecanje={element.uvecanje} umanjenje={element.umanjenje} 
+                porezi={element.porezi} id={element.id} idBruta={res.data.id} valuta={res.data.valuta} trenutnaPlata={res.data.trenutnaPlata} />))) 
+            .catch(err=>alert(err)); 
         
     }
-
     console.log("elments : "+elements)
     const elementi=elements.map((element)=>
     <tr><td>
@@ -220,9 +247,11 @@ export default function Neto(props){
             </select><br/><br/>
 
             <input type={"submit"} value={"Pretraži"} name="pretrazi"></input>
-            </form>
+            </form><br/><br/>
             </div>
             </div>
+            
+            <input type={"button"} onClick={(event)=>osvezi(event)} class="btn btn-warning" value={"Osveži"}></input>
             </div>
         )
 

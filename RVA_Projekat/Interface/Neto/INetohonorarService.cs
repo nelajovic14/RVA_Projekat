@@ -2,13 +2,13 @@
 using RVA_Projekat.Model;
 using System.Collections.Generic;
 
-namespace RVA_Projekat.Interface
+namespace RVA_Projekat.Interface.Neto
 {
-    public interface INetohonorarService
+    public interface INetohonorarService:IDupliranje
     {
         NetoHonorar DodajEntitet(NetoHonorarDto dto);
         List<NetoHonorar> GetAll();
-        NetoHonorar Get(int id);
+        NetoHonorar Get(NetoHonorarDto dto);
         void Obrisi(NetoHonorar netoHonorar);
         NetoHonorar Dodaj(NetoHonorar neto);
         NetoHonorar Edit(NetoHonorarDto dto);

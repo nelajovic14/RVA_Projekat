@@ -1,8 +1,10 @@
 import React,{useRef} from "react";
-import { dodajZaposlenog,dodajBruto } from "../api/index.js";
 import useForm from "../useForm";
 import * as ReactDOMClient from 'react-dom/client';
 import Result from "./Result.js";
+import axios from 'axios'
+
+export const BASE_URL="https://localhost:44386/";
 
 const getFreshModelObject=()=>({
     ime:'',
@@ -12,8 +14,6 @@ const getFreshModelObject=()=>({
     valuta:'',
     korisnik:''
 })
-
-
 
 export default function DodajZaposlenog(props){
     const {
@@ -48,11 +48,11 @@ export default function DodajZaposlenog(props){
         values.godineIskustva=godine.current.value;
 
         if(!trenutnaPlata.current.value){
-            dodajZaposlenog('zaposleni')
-            .post(values)
-            .then(alert("Novi zaposleni je dodat bez bruto honorara"))
-            .catch(err=>console.log(err))
-            return;
+            return axios 
+                        .post(`${BASE_URL}api/zaposleni`, values, config) 
+                        .then(res=>alert("Novi zaposleni je dodat bez bruto honorara")) 
+                        .catch(err=>alert(err))
+            
         }
         if(trenutnaPlata.current.value<0){
 
@@ -64,15 +64,16 @@ export default function DodajZaposlenog(props){
         values.trenutnaPlata=trenutnaPlata.current.value;
         values.valuta=valuta.current.value;
 
-
-        dodajBruto('brutohonorar')
-        .post(values)
-        .then(res=>(values.brutoHonorarId=res.data.id, dodajZaposlenog('zaposleni')
-        .post(values)
-        .then(alert("Novi zaposleni je dodat"))
-        .catch(err=>console.log(err))))
-        .catch(err=>console.log(err))
-
+        const config = {
+            headers: {  Authorization: 'Bearer ' +  localStorage.getItem('token'),}
+        };
+          return axios 
+                    .post(`${BASE_URL}api/brutohonorar`, values, config) 
+                    .then(response =>(values.brutoHonorarId=response.data.id,axios 
+                        .post(`${BASE_URL}api/zaposleni`, values, config) 
+                        .then(res=>alert("Novi zaposleni je dodan")) 
+                        .catch(err=>alert(err)))) 
+                    .catch(err=>alert(err));
        
     }
 

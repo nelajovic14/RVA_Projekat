@@ -7,9 +7,9 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using RVA_Projekat.Dto;
-using RVA_Projekat.Interface;
 using RVA_Projekat.Model;
 using RVA_Projekat.Enums;
+using RVA_Projekat.Interface.InterfaceUser;
 
 namespace RVA_Projekat.Services
 {
@@ -40,10 +40,10 @@ namespace RVA_Projekat.Services
                     claims.Add(new Claim(ClaimTypes.Role, "admin")); //Add user type to claim
                 else if(u.Role==Enums.Uloga.KORISNIK)
                     claims.Add(new Claim(ClaimTypes.Role, "korisnik"));
-                //claims.Add(new Claim("Neki_moj_claim", "imam_ga"));
 
-                //Kreiramo kredencijale za potpisivanje tokena. Token mora biti potpisan privatnim kljucem
-                //kako bi se sprecile njegove neovlascene izmene
+
+                claims.Add(new Claim(ClaimTypes.Role, "user"));
+
                 SymmetricSecurityKey secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_secretKey.Value));
                 var signinCredentials = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
                 var tokeOptions = new JwtSecurityToken(
@@ -67,28 +67,19 @@ namespace RVA_Projekat.Services
             User user = _userRepository.FindByUsername(dto.Username);
             if (user == null)
                 return null;
-
-            if (BCrypt.Net.BCrypt.Verify(dto.Password, user.Password))//Uporedjujemo hes pasvorda iz baze i unetog pasvorda
-            {
-                user.Name = dto.Name;
-                user.LastName = dto.LastName;
-                _userRepository.Remove(user);
-                User u = new User() { Username = dto.Username, Password = BCrypt.Net.BCrypt.HashPassword(dto.Password), Name = dto.Name, LastName = dto.LastName };
-                _userRepository.Add(u);
-                return u;
-                
-            }
-            else
-            {
-                return null;
-            }
+          
+            user.Name = dto.Name;
+            user.LastName = dto.LastName;
+            _userRepository.Edit(user);
+            return user;
+           
         }
 
-        public bool Register(UserRegisterDto dto)
+        public User DodajEntitet(UserRegisterDto dto)
         {
             User user = _userRepository.FindByUsername(dto.Username);
             if (user != null)
-                return false;
+                return null;
             Uloga u;
             if (dto.Uloga == "ADMIN")
                 u = Uloga.ADMIN;
@@ -96,17 +87,16 @@ namespace RVA_Projekat.Services
             {
                 u = Uloga.KORISNIK;
             }
-
+            User newUser = new User() { Username = dto.Username, Password = BCrypt.Net.BCrypt.HashPassword(dto.Password), Name = dto.Name, LastName = dto.Lastname, Role = u };
             try
             {
-                _userRepository.Add(new User() { Username = dto.Username, Password = BCrypt.Net.BCrypt.HashPassword(dto.Password), Name = dto.Name, LastName = dto.LastName ,Role=u});
+               return _userRepository.Add(newUser);
             }
             catch(Exception e)
             {
                 Console.Write(e.Message);
-                return false;
+                return null;
             }
-            return true;
         }
 
         public User Get(UserDto dto)

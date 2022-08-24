@@ -1,7 +1,6 @@
 import React from "react";
 import {useState} from "react";
 import axios from 'axios'
-import { obrisiBruto } from "../api/index.js";
 import DodajBrutoHonorar from "./DodajBrutoHonorar.js";
 import IzmeniBrutoHonorar from "./IzmeniBruto.js";
 import * as ReactDOMClient from 'react-dom/client';
@@ -30,18 +29,38 @@ export default function Bruto(props){
     const obrisi=(event,element)=>{
        element.korisnik=props.username;
         event.preventDefault();
-        console.log("obrisi")
-        obrisiBruto("brutohonorar")
-        .post(element)
-        .then(setIsChanged(true), axios.get(BASE_URL+'api/brutohonorar')
-        .then(response => (setElements(response.data),setIsChanged(true))))
         
+        axios.delete(`${BASE_URL}api/brutohonorar`, {
+            headers: {
+                Authorization: 'Bearer ' +  localStorage.getItem('token'),
+            },
+            data: {
+              id:element.id,
+              trenutnaPlata:element.trenutnaPlata,
+              valuta:element.valuta,
+              korisnik:props.username
+            }
+          })
+          .then(res=>(alert("obrisano"),setIsChanged(true)))
+          .catch(err=>alert(err))
+          
+    }
+
+    const osvezi = e=>{
+        e.preventDefault();
+        setIsChanged(true);
     }
 
     if(isChanged){
-        console.log(isChanged)
-        axios.get(BASE_URL+'api/brutohonorar')
-        .then(response => (setElements(response.data),setIsChanged(false)))
+
+        axios.get(`${BASE_URL}api/brutohonorar`, {
+            headers: {
+                Authorization: 'Bearer ' +  localStorage.getItem('token'),
+            }
+          })
+          .then(response => (setElements(response.data),setIsChanged(false)))
+          .catch(err=>alert(err))
+
     }
 
 
@@ -67,7 +86,9 @@ export default function Bruto(props){
                     <td ><b>VALUTA</b></td><td>&nbsp;</td><td>&nbsp;</td></tr></thead>
                 {elementi}
             </table><br/>
-            <input type={"button"} onClick={(event)=>dodaj(event)}  value={"Dodaj"} class="btn btn-info"></input>
+            <input type={"button"} onClick={(event)=>dodaj(event)}  value={"Dodaj"} class="btn btn-info"></input><br/><br/>
+            
+            <input type={"button"} onClick={(event)=>osvezi(event)} class="btn btn-info" value={"Osveži"}></input>
             </div>
         )
             

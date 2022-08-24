@@ -18,7 +18,7 @@ namespace RVA_Projekat.Repository
         public Porez Add(Porez entity)
         {
             _dbContext.Porez.Add(entity);
-            
+           
             return entity;
         }
         public void SaveAll()

@@ -1,8 +1,10 @@
-import React,{useRef, useState} from "react";
-import {  dodajBruto,izmeniZapolsenog} from "../api/index.js";
+import React,{ useState} from "react";
 import * as ReactDOMClient from 'react-dom/client';
 import Result from "./Result.js";
 import useForm from "../useForm";
+import axios from 'axios'
+
+export const BASE_URL="https://localhost:44386/";
 
 const getFreshModelObject=()=>({
     trenutnaPlata:0,
@@ -72,13 +74,22 @@ export default function EditZaposleni(props){
         values.korisnik=props.username;
         values.trenutnaPlata=plata;
         values.valuta=val;
-        dodajBruto('brutohonorar')
-        .post(values)
-        .then(res=>(console.log(res),values.id=props.id,values.ime=ime,values.godineIskustva=godine,values.brutoHonorarId=res.data.id,
-        izmeniZapolsenog('zaposleni')
-        .post(values)
-        .then(res=>(console.log(res.data),alert("Podaci su promenjeni!")))
-        ));
+        values.id=props.brutoId;
+        values.ime=ime;
+        values.godineIskustva=godine;
+        
+        const config = {
+            headers: {  Authorization: 'Bearer ' +  localStorage.getItem('token'),}
+        };
+        return axios 
+        .put(`${BASE_URL}api/brutohonorar`, values, config) 
+        .then(response =>( values.brutoHonorarId=response.data.id,values.id=props.id,axios 
+            .put(`${BASE_URL}api/zaposleni`, values, config) 
+            .then(response =>(alert("Zaposleni je izmenjen"))) 
+            .catch(err=>alert(err)))) 
+        .catch(err=>alert(err)); 
+
+
     }
     return(
         <div class="container text-center">

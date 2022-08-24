@@ -3,7 +3,9 @@ import {  dodajBruto, izmeniNeto} from "../api/index.js";
 import * as ReactDOMClient from 'react-dom/client';
 import Result from "./Result.js";
 import UseForm from "../useForm";
+import axios from 'axios'
 
+export const BASE_URL="https://localhost:44386/";
 
 const getFreshModelObject=()=>({
     trenutnaPlata:0,
@@ -34,6 +36,8 @@ export default function IzmeniNetoHonorar(props){
         setUvecanje(props.uvecanje)
         setPoreze(props.porezi)
         opcije=[];
+        console.log(props.uvecanje);
+        console.log(props.umanjenje);
     }
     console.log(plata,val,porezi,uvecanje,umanjenje)
     const nazad =e=>{
@@ -59,7 +63,12 @@ export default function IzmeniNetoHonorar(props){
     
     const changePorez = function(event,selectedItems){
         if(opcije.includes(selectedItems)){
-            return;
+            for(var i=0;i<opcije.length;i++){
+                if(opcije[i]==selectedItems){
+                    opcije.splice(i,1);
+                    return;
+                }
+            }
         }
         console.log(event.target.value,selectedItems,opcije)
         opcije.push(selectedItems)
@@ -87,23 +96,26 @@ export default function IzmeniNetoHonorar(props){
 
     const izmeni=e=>
     {
-
+        
         e.preventDefault();
         values.korisnik=props.username;
         values.trenutnaPlata=plata;
         values.valuta=val;
-        dodajBruto('brutohonorar')
-        .post(values)
-        .then(res=>(console.log(res),
-        values.id=props.id,
-        values.uvecanje=uvecanje,
-        values.umanjenje=umanjenje,
-        values.porezi=porezi,
-        values.brutoHonorarId=res.data.id,
-        izmeniNeto('netohonorar')
-        .post(values)
-        .then(result=>(console.log(result),alert("Podaci su promenjeni!")))));
-       
+        values.id=props.idBruta;
+        values.uvecanje=uvecanje;
+        values.umanjenje=umanjenje;
+        values.porezi=porezi;
+
+        const config = {
+            headers: {  Authorization: 'Bearer ' +  localStorage.getItem('token'),}
+        };
+        return axios 
+                .put(`${BASE_URL}api/brutohonorar`, values, config) 
+                .then(response =>( values.brutoHonorarId=response.data.id,values.id=props.id,axios 
+                    .put(`${BASE_URL}api/netohonorar`, values, config) 
+                    .then(response =>(alert("Neto honorar je izmenjen"))) 
+                    .catch(err=>alert(err)))) 
+                .catch(err=>alert(err)); 
 
     }
 

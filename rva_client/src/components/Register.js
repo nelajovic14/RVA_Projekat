@@ -1,15 +1,16 @@
 import React,{useRef,useState} from "react";
-import { createAPIEndpointRegister } from "../api/index.js";
 import * as ReactDOMClient from 'react-dom/client';
 import useForm from "../useForm";
-import Result from "./Result.js";
+import axios from 'axios'
+
+export const BASE_URL="https://localhost:44386/";
 
 const getFreshModelObject=()=>({
     username:'',
     password:'',
     name:'',
     lastname:'',
-    role:'',
+    uloga:'',
     korisnik:''
 })
 
@@ -34,17 +35,22 @@ export default function Register(props){
                 const container = document.getElementById('root');
                 const root = ReactDOMClient.createRoot(container);
                 values.korisnik=props.username;
-                createAPIEndpointRegister('users')
-                .post(values)
-                .then(res=>(console.log(res),setAlert(<div class="alert alert-success">
-                <strong>Success!</strong> 
-              </div>)))
-                .catch(err=>(console.log(err),setAlert(<div class="alert alert-danger">
-                <strong>Can't register user with existing username!</strong> 
-              </div>)))
-                
+               
+                   const config = {
+                        headers: {  Authorization: 'Bearer ' +  localStorage.getItem('token'),}
+                    };
+                  return axios 
+                    .post(`${BASE_URL}api/users/register`, values, config) 
+                    .then(res=>(setAlert(<div class="alert alert-success">
+                    <strong>Success!</strong> 
+                  </div>))) 
+                    .catch(err=>(console.log(err),setAlert(<div class="alert alert-danger">
+                    <strong>Can't register because you are not admin!</strong> 
+                  </div>))); 
+             
             }
         }
+
         let usernameError = "";
         let passwordError = "";
         let nameError="";
@@ -78,7 +84,7 @@ export default function Register(props){
             return true;
         }
 
-        if(props.uloga=="ADMIN"){
+
     return(
         <div class="jumbotron text-center">
             <h3>Register new user:</h3><br/><br/>
@@ -102,11 +108,5 @@ export default function Register(props){
         {alertMessage}
         </div>
     )
-        }
-        else{
-            return(
-                <div class="alert alert-danger">
-                <h5>You can't register new user because you are not admin!</h5></div>
-            )
-        }
+       
 }

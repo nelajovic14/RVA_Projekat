@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using RVA_Projekat.Dogadjaji;
 using RVA_Projekat.Dto;
 using RVA_Projekat.Model;
@@ -19,7 +20,8 @@ namespace RVA_Projekat.Controllers
 
         }
         [HttpPost]
-        public IActionResult Post([FromBody] UserDto dto)
+        [Authorize(Roles ="user")]
+        public IActionResult Get([FromBody] UserDto dto)
         {
             List<Dogadjaj> info = logger.GetInfo(dto.Username);
             return Ok(info);

@@ -1,5 +1,5 @@
 ﻿using RVA_Projekat.Infrastructure;
-using RVA_Projekat.Interface;
+using RVA_Projekat.Interface.Bruto;
 using RVA_Projekat.Model;
 using System.Collections.Generic;
 
@@ -8,11 +8,9 @@ namespace RVA_Projekat.Initilaizer
     public class BrutoHonorarInitializer : IBrutoHonorarInitializer
     {
         IBrutoHonorarRepository repository;
-        HonorarDbContext _dbContext;
-        public BrutoHonorarInitializer(IBrutoHonorarRepository repository, HonorarDbContext dbContext)
+        public BrutoHonorarInitializer(IBrutoHonorarRepository repository)
         {
             this.repository = repository;
-            _dbContext = dbContext;
         }
     
         public void InitializBrutoHonorars()
@@ -28,7 +26,6 @@ namespace RVA_Projekat.Initilaizer
             repository.Add(bh);
             repository.Add(bh2);
             repository.Add(bh3);
-            _dbContext.SaveChanges();
         }
     }
 }

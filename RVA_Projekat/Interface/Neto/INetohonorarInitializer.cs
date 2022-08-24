@@ -1,4 +1,4 @@
-﻿namespace RVA_Projekat.Interface
+﻿namespace RVA_Projekat.Interface.Neto
 {
     public interface INetohonorarInitializer
     {

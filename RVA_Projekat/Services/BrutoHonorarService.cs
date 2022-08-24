@@ -1,6 +1,6 @@
 ﻿using RVA_Projekat.Dto;
 using RVA_Projekat.Enums;
-using RVA_Projekat.Interface;
+using RVA_Projekat.Interface.Bruto;
 using RVA_Projekat.Model;
 using System.Collections.Generic;
 
@@ -31,10 +31,7 @@ namespace RVA_Projekat.Services
             {
                 bh.valuta = Valuta.EUR;
             }
-            if (GetByPlataIValuta(bh.TrenutnaPlata, bh.valuta) != null)
-            {
-                return GetByPlataIValuta(bh.TrenutnaPlata, bh.valuta);
-            }
+            
             repository.Add(bh);
             return bh;
         }
@@ -44,41 +41,60 @@ namespace RVA_Projekat.Services
             return repository.GetAll();
         }
 
+        public BrutoHonorar Get(BrutoHonorarDto dto)
+        {
+            return repository.Find(dto.Id);
+        }
+
+        
+
+        public BrutoHonorar Edit(BrutoHonorarDto dto)
+        {
+            BrutoHonorar brutoHonorar = Get(dto);
+            if (brutoHonorar != null)
+            {
+                brutoHonorar.TrenutnaPlata = dto.TrenutnaPlata;
+                if (dto.valuta == "KM")
+                {
+                    brutoHonorar.valuta = Valuta.KM;
+                }
+                else if (dto.valuta == "EUR")
+                {
+                    brutoHonorar.valuta = Valuta.EUR;
+                }
+                else
+                {
+                    brutoHonorar.valuta = Valuta.RSD;
+                }
+                return repository.Edit(brutoHonorar);
+            }
+            else
+            {
+                brutoHonorar = new BrutoHonorar { TrenutnaPlata = dto.TrenutnaPlata };
+                if (dto.valuta == "KM")
+                {
+                    brutoHonorar.valuta = Valuta.KM;
+                }
+                else if (dto.valuta == "EUR")
+                {
+                    brutoHonorar.valuta = Valuta.EUR;
+                }
+                else
+                {
+                    brutoHonorar.valuta = Valuta.RSD;
+                }
+                return repository.Add(brutoHonorar);
+            }
+        }
+
         public BrutoHonorar GetById(int id)
         {
             return repository.Find(id);
         }
 
-        public BrutoHonorar GetByPlataIValuta(int plata, Valuta v)
+        public BrutoHonorar Add(BrutoHonorar honorar)
         {
-            List<BrutoHonorar> brutoHonorars = GetAll();
-            foreach(var bh in brutoHonorars)
-            {
-                if(bh.valuta == v && bh.TrenutnaPlata == plata)
-                {
-                    return bh;
-                }
-            }
-            return null;
-        }
-
-        public BrutoHonorar Edit(BrutoHonorarDto dto)
-        {
-            BrutoHonorar brutoHonorar = GetById(dto.Id);
-            brutoHonorar.TrenutnaPlata = dto.TrenutnaPlata;
-            if (dto.valuta == "KM")
-            {
-                brutoHonorar.valuta = Valuta.KM;
-            }
-            else if (dto.valuta == "EUR")
-            {
-                brutoHonorar.valuta = Valuta.EUR;
-            }
-            else
-            {
-                brutoHonorar.valuta = Valuta.RSD;
-            }
-            return repository.Edit(brutoHonorar);
+            return repository.Add(honorar);
         }
     }
 }

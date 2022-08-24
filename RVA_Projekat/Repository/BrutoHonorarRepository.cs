@@ -1,5 +1,5 @@
 ﻿using RVA_Projekat.Infrastructure;
-using RVA_Projekat.Interface;
+using RVA_Projekat.Interface.Bruto;
 using RVA_Projekat.Model;
 using System.Collections.Generic;
 using System.Linq;

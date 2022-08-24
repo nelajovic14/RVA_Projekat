@@ -12,6 +12,7 @@ import Bruto from './BrutoHonorari';
 import Zapolseni from "./Zaposleni.js"
 import Logs from './Logs';
 
+
 const getFreshModelObject=()=>({
     username:'',
     password:'',
@@ -35,16 +36,13 @@ export default function Result(props){
     values.username=props.username;
     values.password=props.password;
 
-    if(values.name=='' && values.lastName==''){
-    createAPIEndpointgetUser('users')
-        .post(values)
-        .then(res=>(setValues(res.data),console.log(res.data),root.render(
+      return(
 
             <BrowserRouter>
             <Routes>
            <Route path="/" element={<Layout />}>      
-            <Route path='Register' element={<Register username={values.username} uloga={res.data.uloga}/>} />
-            <Route path='EditInformation'   element={<Edit name={res.data.name} lastname={res.data.lastName} username={values.username} password={values.password}/>} />
+            <Route path='Register' element={<Register username={values.username} />} />
+            <Route path='EditInformation'   element={<Edit username={values.username} password={values.password}/>} />
             <Route path='Login' element={<Logout username={values.username}/>}  />
             <Route path='NetoHonorari' element ={<Neto  username={values.username} />} />
             <Route path='BrutoHonorari' element ={<Bruto username={values.username}   />}/>
@@ -53,8 +51,7 @@ export default function Result(props){
           </Route>
               </Routes>
               </BrowserRouter>
-        ) ))
+        )
 
     }
     
-}

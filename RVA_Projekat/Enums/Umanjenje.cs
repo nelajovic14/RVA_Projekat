@@ -4,7 +4,7 @@
     {
         PET,
         DESET,
-        DVADEST,
+        DVADESET,
         PEDESET,
         SEDAMDESET,
         STO
