@@ -18,12 +18,10 @@ namespace RVA_Projekat.Controllers
         
         private INetohonorarService netohonorarService;
         private ILoggerManager loggerManager;
-        private IBrutoHonorarService brutohonorarService;
-        public NetohonorarController(INetohonorarService netohonorarService,ILoggerManager loggerManager,IBrutoHonorarService brutoHonorarService)
+        public NetohonorarController(INetohonorarService netohonorarService,ILoggerManager loggerManager)
         {
             this.netohonorarService = netohonorarService;
             this.loggerManager = loggerManager;
-            brutohonorarService = brutoHonorarService;
         }
         [HttpGet]
         [Authorize(Roles ="user")]

@@ -110,23 +110,7 @@ namespace RVA_Projekat.Services
             NetoHonorar nh = netohonorarService.Find(honorar.Id);
             BrutoHonorar bruto = brutoHonorarService.GetById(honorar.BrutoHonorarId);
             nh.honorar = bruto;
-            /*List<Porez> porezs = new List<Porez>();
-            if (honorar.Porezi != null)
-            {
-                foreach (var p in honorar.Porezi)
-                {
-                    if (p == "POTROSNJA")
-                        porezs.Add(new Porez(Enums.PorezType.POTROSNJA, nh.Id));
-                    else if (p == "DOBIT")
-                        porezs.Add(new Porez(Enums.PorezType.DOBIT, nh.Id));
-                    else if (p == "DOHODAK")
-                        porezs.Add(new Porez(Enums.PorezType.DOHODAK, nh.Id));
-                    else if (p == "IMOVINA")
-                        porezs.Add(new Porez(Enums.PorezType.IMOVINA, nh.Id));
-
-                }
-            }
-            nh.Porezi= porezs;*/
+          
             List<Porez> porezs = PorezRepository.GetAll();
             NetoHonorar newNeto = nh.Dupliraj();
             BrutoHonorar newBruto= brutoHonorarService.Add(newNeto.honorar);
@@ -138,41 +122,7 @@ namespace RVA_Projekat.Services
                 PorezRepository.Add(p);
             }
             return newNeto;
-            /*NetoHonorar nh = netohonorarService.Find(honorar.Id);
-            NetoHonorar newNeto=new NetoHonorar { umanjenje=nh.umanjenje,uvecanje=nh.uvecanje };
-            BrutoHonorar bruto= brutoHonorarService.GetById(honorar.BrutoHonorarId);
-            BrutoHonorar bh= new BrutoHonorar { TrenutnaPlata = bruto.TrenutnaPlata, valuta = bruto.valuta };
-            BrutoHonorar newBruto= brutoHonorarService.Add(bh);
-            newNeto.BrutoHonorarId = newBruto.Id;
-            newNeto.honorar = newBruto;
-            
-            
-            NetoHonorar neto= netohonorarService.Add(newNeto);
-            List<Porez> porezs = new List<Porez>();
-            if (honorar.Porezi != null)
-            {
-                foreach (var p in honorar.Porezi)
-                {
-
-                    
-                    if (p == "POTROSNJA")
-                        porezs.Add(new Porez(Enums.PorezType.POTROSNJA, neto.Id));
-                    else if (p == "DOBIT")
-                        porezs.Add(new Porez(Enums.PorezType.DOBIT, neto.Id));
-                    else if (p == "DOHODAK")
-                        porezs.Add(new Porez(Enums.PorezType.DOHODAK, neto.Id));
-                    else if (p == "IMOVINA")
-                        porezs.Add(new Porez(Enums.PorezType.IMOVINA, neto.Id));
-
-                }
-            }
-            foreach(var p in porezs)
-            {
-                PorezRepository.Add(p);
-            }
-            PorezRepository.SaveAll();
-            neto.Porezi = porezs;
-            return neto;*/
+           
         }
 
         public NetoHonorar Edit(NetoHonorarDto dto)

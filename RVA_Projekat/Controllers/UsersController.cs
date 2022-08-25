@@ -83,7 +83,7 @@ namespace RVA_Projekat.Controllers
         }
         [HttpPost("getUser")]
         [Authorize(Roles = "user")]
-        public IActionResult getUser([FromBody] UserDto dto)
+        public IActionResult GetUser([FromBody] UserDto dto)
         {
             User u = userServis.Get(dto);
             UserRegisterDto pom;
