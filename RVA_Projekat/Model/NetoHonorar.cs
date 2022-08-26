@@ -48,6 +48,7 @@ namespace RVA_Projekat.Model
             newNeto.umanjenje = this.umanjenje;
             newNeto.uvecanje = this.uvecanje;
             newNeto.Porezi = new List<Porez>();
+            newNeto.new_date = DateTime.Now;
             if (this.Porezi != null)
             {
                 foreach(var p in this.Porezi)
