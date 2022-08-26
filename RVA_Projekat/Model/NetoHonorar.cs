@@ -1,5 +1,6 @@
 ﻿using RVA_Projekat.Enums;
 using RVA_Projekat.Interface;
+using System;
 using System.Collections.Generic;
 
 namespace RVA_Projekat.Model
@@ -40,7 +41,7 @@ namespace RVA_Projekat.Model
         public Uvecanje uvecanje { get; set; }
         public int BrutoHonorarId { get; set; }
         public BrutoHonorar honorar { get; set; }
-
+        public DateTime new_date { get; set; }
         public NetoHonorar Dupliraj()
         {
             NetoHonorar newNeto = new NetoHonorar();

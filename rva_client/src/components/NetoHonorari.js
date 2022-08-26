@@ -15,7 +15,8 @@ const getFreshModelObject=()=>({
     umanjenje:null,
     trenutnaPlata:0,
     valuta:'',
-    korisnik:''
+    korisnik:'',
+    vremeZaIzmenu:''
 })
 
 export default function Neto(props){
@@ -103,6 +104,10 @@ export default function Neto(props){
     const obrisi=(event,element)=>{
 
         event.preventDefault();
+        var today = new Date();
+        var datum = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate().toLocaleString();
+        var time = today.getHours() + ':' + today.getMinutes() + ':' + today.getSeconds().toLocaleString();
+
         axios.delete(`${BASE_URL}api/netohonorar`, {
             headers: {
                 Authorization: 'Bearer ' +  localStorage.getItem('token'),
@@ -112,7 +117,8 @@ export default function Neto(props){
               uvecanje:element.uvecanje,
               umanjenje:element.umanjenje,
               porezi:element.porezi,
-              korisnik:props.username
+              korisnik:props.username,
+              vremeZaIzmenu:datum+" "+time,
             }
           })
           .then(response=>(alert("obrisano"),setIsChanged(true)))

@@ -48,12 +48,13 @@ namespace RVA_Projekat.Controllers
         public IActionResult Delete([FromBody] NetoHonorarDto dto)
         {
             NetoHonorar netoHonorar=netohonorarService.Get(dto);
-            try
+            DateTime izmenaBrisanja = DateTime.Parse(dto.VremeZaIzmenu);
+             bool uspesno=netohonorarService.Obrisi(netoHonorar,izmenaBrisanja);
+            if (uspesno)
             {
-                netohonorarService.Obrisi(netoHonorar);
                 loggerManager.LogInformation(new Dogadjaj { dogadjaj = "Delete neto", korisnik = dto.Korisnik, poruka = "SUCCES" });
             }
-            catch
+            else
             {
                 loggerManager.LogInformation(new Dogadjaj { dogadjaj = "Delete neto", korisnik = dto.Korisnik, poruka = "ERROR" });
             }
@@ -81,8 +82,17 @@ namespace RVA_Projekat.Controllers
         public IActionResult Put([FromBody] NetoHonorarDto dto)
         {           
             NetoHonorar nh= netohonorarService.Edit(dto);
-            loggerManager.LogInformation(new Dogadjaj { dogadjaj = "Edit neto", korisnik = dto.Korisnik, poruka = "SUCCES" });
-            return Ok(nh);
+            if (nh != null)
+            {
+                loggerManager.LogInformation(new Dogadjaj { dogadjaj = "Edit neto", korisnik = dto.Korisnik, poruka = "SUCCES" });
+                return Ok(nh);
+            }
+            else
+            {
+
+                loggerManager.LogInformation(new Dogadjaj { dogadjaj = "Edit neto", korisnik = dto.Korisnik, poruka = "ERROR" });
+                return Ok(new NetoHonorar { Id=-1});
+            }
         }
 
         [HttpPost("pretraga")]

@@ -6,6 +6,7 @@ using RVA_Projekat.Enums;
 using RVA_Projekat.Interface.Bruto;
 using RVA_Projekat.Interface.Neto;
 using RVA_Projekat.Model;
+using System;
 using System.Collections.Generic;
 
 namespace RVA_Projekat.Controllers
@@ -74,7 +75,7 @@ namespace RVA_Projekat.Controllers
             {
                 if (nh.BrutoHonorarId == dto.Id)
                 {
-                    netohonorarService.Obrisi(nh);
+                    netohonorarService.Obrisi(nh,DateTime.Now);
                     break;
                 }
             }

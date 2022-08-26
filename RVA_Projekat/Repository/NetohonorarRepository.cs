@@ -1,7 +1,9 @@
 ﻿using RVA_Projekat.Infrastructure;
 using RVA_Projekat.Interface.Neto;
 using RVA_Projekat.Model;
+using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 
 namespace RVA_Projekat.Repository
@@ -43,6 +45,12 @@ namespace RVA_Projekat.Repository
         {
             _dbContext.NetoHonorars.Remove(entity);
             _dbContext.SaveChanges();
+            
+        }
+        public DateTime GetLastChange(int id)
+        {
+            NetoHonorar nh = Find(id);
+            return nh.new_date;
         }
     }
 }

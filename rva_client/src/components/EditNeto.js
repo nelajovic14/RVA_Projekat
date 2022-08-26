@@ -4,6 +4,7 @@ import * as ReactDOMClient from 'react-dom/client';
 import Result from "./Result.js";
 import UseForm from "../useForm";
 import axios from 'axios'
+import { Radio } from "@mui/material";
 
 export const BASE_URL="https://localhost:44386/";
 
@@ -15,7 +16,9 @@ const getFreshModelObject=()=>({
     umanjenje:'',
     porezi:[],
     brutoHonorarId:0,
-    korisnik:''
+    korisnik:'',
+    vremeSlanjaNaFront:'',
+    vremeZaIzmenu:''
 })
 
 var opcije = [];
@@ -27,9 +30,25 @@ export default function IzmeniNetoHonorar(props){
     const[porezi,setPoreze]=useState([])
     const[uvecanje,setUvecanje]=useState('')
     const[umanjenje,setUmanjenje]=useState('')
+    const[konlikt,setKonflikt]=useState(<div></div>)
+    const[rezultat,setRezultat]=useState('podaci')
+    
+
+        
+    const {
+        values,
+        setValues,
+        errors,
+        setErrors,
+        handleInputChanges
+    } = UseForm(getFreshModelObject)
 
     if(plata==0 && val=='' && uvecanje=='' && umanjenje==''){
-        console.log(props.trenutnaPlata,props.valuta,props.umanjenje,props.uvecanje,props.porezi)
+        var today = new Date();
+        var datum = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate().toLocaleString();
+        var time = today.getHours() + ':' + today.getMinutes() + ':' + today.getSeconds().toLocaleString();
+        values.vremeSlanjaNaFront=datum+" "+time;
+
         setPlata(props.trenutnaPlata)
         setVal(props.valuta)
         setUmanjenje(props.umanjenje)
@@ -85,19 +104,38 @@ export default function IzmeniNetoHonorar(props){
         console.log(event.target.value)
         setUvecanje(event.target.value);
     }
-    
-    const {
-        values,
-        setValues,
-        errors,
-        setErrors,
-        handleInputChanges
-    } = UseForm(getFreshModelObject)
+
+    const handleDate=e=>{
+        e.preventDefault();
+        var today = new Date();
+        var datum = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate().toLocaleString();
+        var time = today.getHours() + ':' + today.getMinutes() + ':' + today.getSeconds().toLocaleString();
+        values.vremeSlanjaNaFront=datum+" "+time;
+        const config = {
+            headers: {  Authorization: 'Bearer ' +  localStorage.getItem('token'),}
+        };
+        return axios 
+                .put(`${BASE_URL}api/brutohonorar`, values, config) 
+                .then(response =>( values.brutoHonorarId=response.data.id,values.id=props.id,axios 
+                    .put(`${BASE_URL}api/netohonorar`, values, config) 
+                    .then(response =>(handleResponse(response))) 
+                    .catch(err=>("Konflikt")))) 
+                .catch(err=>alert(err)); 
+    }
 
     const izmeni=e=>
     {
         
         e.preventDefault();
+        if(!plata){
+            alert("Plata mora biti uneta!")
+            return;
+        }
+        if(!porezi){
+            alert("Porezi moraju biti uneti!")
+            return;
+        }
+
         values.korisnik=props.username;
         values.trenutnaPlata=plata;
         values.valuta=val;
@@ -105,6 +143,10 @@ export default function IzmeniNetoHonorar(props){
         values.uvecanje=uvecanje;
         values.umanjenje=umanjenje;
         values.porezi=porezi;
+        var today = new Date();
+        var datum = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate().toLocaleString();
+        var time = today.getHours() + ':' + today.getMinutes() + ':' + today.getSeconds().toLocaleString();
+        values.vremeZaIzmenu=datum+" "+time;
 
         const config = {
             headers: {  Authorization: 'Bearer ' +  localStorage.getItem('token'),}
@@ -113,10 +155,20 @@ export default function IzmeniNetoHonorar(props){
                 .put(`${BASE_URL}api/brutohonorar`, values, config) 
                 .then(response =>( values.brutoHonorarId=response.data.id,values.id=props.id,axios 
                     .put(`${BASE_URL}api/netohonorar`, values, config) 
-                    .then(response =>(alert("Neto honorar je izmenjen"))) 
-                    .catch(err=>alert(err)))) 
+                    .then(response =>(handleResponse(response))) 
+                    .catch(err=>("Konflikt")))) 
                 .catch(err=>alert(err)); 
 
+    }
+
+    const handleResponse=(response)=>{
+        if(response.data.id==-1){
+            alert("Konflikt")
+            setKonflikt(<div>Izaberite opciju : <button onClick={nazad}>Pregazi moje izmene</button> <button onClick={handleDate}>Pregazi tuđe izmene</button></div>)
+        }
+        else{
+            alert("Neto honorar je izmenjen!")
+        }
     }
 
     const p=useRef();
@@ -162,6 +214,8 @@ export default function IzmeniNetoHonorar(props){
                 <input type={"submit"} name='izmeni' value={"Izmeni"} class="btn btn-success"></input> &nbsp;&nbsp;
             <input type={"button"} name='back' value={"Nazad"} onClick={nazad} class="btn btn-success"></input><br/>
             </form>
+            <br/><br/>
+            {konlikt}
         </div>
     )
 

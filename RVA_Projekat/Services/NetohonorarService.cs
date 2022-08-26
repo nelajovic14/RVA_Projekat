@@ -3,6 +3,7 @@ using RVA_Projekat.Interface;
 using RVA_Projekat.Interface.Bruto;
 using RVA_Projekat.Interface.Neto;
 using RVA_Projekat.Model;
+using System;
 using System.Collections.Generic;
 
 namespace RVA_Projekat.Services
@@ -127,7 +128,16 @@ namespace RVA_Projekat.Services
 
         public NetoHonorar Edit(NetoHonorarDto dto)
         {
+            DateTime izmena1 = DateTime.Parse(dto.VremeSlanjaNaFront);
+            DateTime izmena2 = DateTime.Parse(dto.VremeZaIzmenu);
+            DateTime lastChanged = netohonorarService.GetLastChange(dto.Id);
+            if(izmena1<lastChanged && izmena2 > lastChanged)
+            {
+                return null;
+            }
+
             NetoHonorar nh = netohonorarService.Find(dto.Id);
+            nh.new_date = izmena2;
             if (dto.uvecanje == "PET")
             {
                 nh.uvecanje = Enums.Uvecanje.PET;
@@ -205,7 +215,7 @@ namespace RVA_Projekat.Services
             PorezRepository.SaveAll();
 
             NetoHonorar editovan= netohonorarService.Edit(nh);
-            return editovan;
+           return editovan;
         }
 
         public NetoHonorar Get(NetoHonorarDto dto)
@@ -234,10 +244,15 @@ namespace RVA_Projekat.Services
 
         }
 
-        public void Obrisi(NetoHonorar netoHonorar)
+        public bool Obrisi(NetoHonorar netoHonorar,DateTime izmena)
         {
+            
             if (netoHonorar != null)
             {
+                DateTime vremeBrisanja = netoHonorar.new_date;
+                if (izmena == vremeBrisanja)
+                    return false;
+
                 List<Porez> porezs = PorezRepository.GetAll();
                 foreach (var p in porezs)
                 {
@@ -246,7 +261,9 @@ namespace RVA_Projekat.Services
                 }
                 PorezRepository.SaveAll();
                 netohonorarService.Remove(netoHonorar);
+                return true;
             }
+            return false;
         }
 
 
