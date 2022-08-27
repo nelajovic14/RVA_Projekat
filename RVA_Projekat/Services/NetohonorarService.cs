@@ -83,6 +83,7 @@ namespace RVA_Projekat.Services
             if (brutoHonorarService.GetById(dto.BrutoHonorarId) != null)
                 nh.honorar = brutoHonorarService.GetById(dto.BrutoHonorarId);
             //nh.honorar = brutoHonorarService.GetById(dto.BrutoHonorarId);
+            nh.new_date = DateTime.Now;
             netohonorarService.Add(nh);
             List<Porez> porezs = new List<Porez>();
             foreach (var p in dto.Porezi)
